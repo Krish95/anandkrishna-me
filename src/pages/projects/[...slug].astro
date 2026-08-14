@@ -1,0 +1,237 @@
+---
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import type { GetStaticPaths } from 'astro';
+
+import Base from '@/layouts/Base.astro';
+import Icon from '@/components/Icon.astro';
+import Callout from '@/components/mdx/Callout.astro';
+import Figure from '@/components/mdx/Figure.astro';
+import Aside from '@/components/mdx/Aside.astro';
+import Embed from '@/components/mdx/Embed.astro';
+import { getProjects } from '@/lib/content';
+
+export const getStaticPaths = (async () => {
+  const projects = await getProjects();
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}) satisfies GetStaticPaths;
+
+const { project } = Astro.props;
+const { title, description, year, role, stack, status, url, repo, cover, coverAlt } = project.data;
+const { Content } = await render(project);
+
+const components = { Callout, Figure, Aside, Embed };
+---
+
+<Base title={title} description={description} ogImage={`/og/project-${project.id}.png`}>
+  <article class="shell project-page" data-pagefind-body>
+    <header class="project-page__header">
+      <a href="/projects" class="project-page__back">
+        <Icon name="arrow-right" size={14} class="project-page__back-icon" />
+        All projects
+      </a>
+
+      <h1 class="project-page__title">{title}</h1>
+      <p class="project-page__lede">{description}</p>
+
+      <dl class="project-page__facts">
+        <div>
+          <dt class="label">Year</dt>
+          <dd class="meta">{year}</dd>
+        </div>
+        {
+          role && (
+            <div>
+              <dt class="label">Role</dt>
+              <dd class="meta">{role}</dd>
+            </div>
+          )
+        }
+        <div>
+          <dt class="label">Status</dt>
+          <dd class="meta">{status}</dd>
+        </div>
+        {
+          stack.length > 0 && (
+            <div class="project-page__facts-wide">
+              <dt class="label">Stack</dt>
+              <dd class="meta">{stack.join(' · ')}</dd>
+            </div>
+          )
+        }
+      </dl>
+
+      {
+        (url || repo) && (
+          <div class="project-page__links">
+            {url && (
+              <a class="button" href={url} rel="noopener">
+                Visit
+                <Icon name="arrow-up-right" size={14} />
+              </a>
+            )}
+            {repo && (
+              <a class="button" data-variant="ghost" href={repo} rel="noopener">
+                <Icon name="github" size={14} />
+                Source
+              </a>
+            )}
+          </div>
+        )
+      }
+    </header>
+
+    {
+      cover && (
+        <div class="project-page__cover">
+          <Image src={cover} alt={coverAlt ?? ''} width={1600} height={1000} loading="eager" />
+        </div>
+      )
+    }
+
+    <div class="prose project-page__body">
+      <Content components={components} />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .project-page {
+    padding-block: 3rem 1rem;
+  }
+
+  .project-page__header {
+    max-width: calc(var(--measure) + 2rem);
+  }
+
+  .project-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-decoration: none;
+    margin-bottom: 1.75rem;
+  }
+
+  .project-page__back:hover {
+    color: var(--ink);
+  }
+
+  .project-page__back :global(.project-page__back-icon) {
+    rotate: 180deg;
+  }
+
+  .project-page__title {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 5.5vw, 2.9rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.022em;
+    margin: 0 0 0.7rem;
+    text-wrap: balance;
+  }
+
+  .project-page__lede {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 0 0 2rem;
+    max-width: 48ch;
+    text-wrap: pretty;
+  }
+
+  .project-page__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7rem, auto));
+    gap: 1.25rem 2.5rem;
+    justify-content: start;
+    margin: 0;
+    padding-block: 1.25rem;
+    border-block: 1px solid var(--rule);
+  }
+
+  .project-page__facts dt {
+    margin-bottom: 0.35rem;
+  }
+
+  .project-page__facts dd {
+    margin: 0;
+    color: var(--ink);
+    text-transform: capitalize;
+  }
+
+  /* Stack lists can be long — let them take the full row. */
+  .project-page__facts-wide {
+    grid-column: 1 / -1;
+  }
+
+  .project-page__facts-wide dd {
+    text-transform: none;
+  }
+
+  .project-page__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.95rem;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #16232a;
+    background: var(--marker);
+    border: 1px solid color-mix(in srgb, var(--marker) 70%, black);
+    border-radius: var(--radius);
+    transition:
+      translate 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .button:hover {
+    translate: 0 -1px;
+    box-shadow: 3px 3px 0 var(--peach);
+  }
+
+  .button[data-variant='ghost'] {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--rule-strong);
+  }
+
+  .button[data-variant='ghost']:hover {
+    box-shadow: 3px 3px 0 var(--marker);
+  }
+
+  .project-page__cover {
+    margin-block: 3rem;
+  }
+
+  .project-page__cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+  }
+
+  .project-page__body {
+    margin-top: 3rem;
+  }
+</style>

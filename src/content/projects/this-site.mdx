@@ -1,0 +1,44 @@
+---
+title: This site
+description: A static personal site on Astro 7 — typed content collections, a hand-rolled editorial design system, KaTeX for abstracts, and per-page social cards generated at build time.
+year: '2026'
+role: Everything
+stack: ['Astro 7', 'Tailwind 4', 'MDX', 'KaTeX', 'Cloudflare Pages']
+status: shipped
+repo: https://github.com/
+order: 1
+featured: true
+---
+
+Rebuilt from a Hugo theme I had never customised into something I actually own.
+
+## Why rebuild
+
+The previous site was a Wowchemy/Hugo academic theme. It worked, but the design
+was the template's rather than mine, and every change meant fighting a widget
+system. This one is small enough to read end to end.
+
+## Choices worth noting
+
+- **Astro 7**, static output, roughly 4 KB of JavaScript on a page — a theme
+  toggle, the outline highlighter, and copy buttons. Everything else is HTML.
+- **remark/rehype rather than Sätteri**, Astro 7's faster default Rust markdown
+  engine. Sätteri parses maths but ships no renderer, and abstracts here are
+  full of LaTeX, so KaTeX — which only exists as a rehype plugin — decided it.
+- **Typed content collections.** Every paper and post has a Zod schema, so a
+  missing field or a mistyped venue fails the build instead of rendering blank.
+- **No typography plugin.** The prose styles are hand-written, which is more CSS
+  but means the reading column is exactly what I want rather than what a preset
+  thinks I want.
+- **Colour lives in CSS custom properties**, with three theme states — system,
+  light, dark — so the toggle wins in both directions and nothing flashes on
+  load.
+- **Social cards are generated at build time** with Satori and resvg from
+  vendored TTFs, so there's no runtime image service to keep alive.
+- **Search is Pagefind**, indexing the built HTML. Static, no API, no index to
+  maintain.
+
+## What it costs to run
+
+Nothing. Static output on Cloudflare Pages' free tier, with the domain the only
+recurring line item.

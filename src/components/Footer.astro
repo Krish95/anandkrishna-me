@@ -1,0 +1,99 @@
+---
+import { SITE, SOCIALS } from '@/site.config';
+import Icon from './Icon.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div>
+      <p class="site-footer__name">{SITE.author.name}</p>
+      <p class="meta site-footer__note">
+        Built with <a href="https://astro.build">Astro</a>. Set in Newsreader &amp; Jost.
+      </p>
+      <p class="meta site-footer__note">© {year} — all words my own.</p>
+    </div>
+
+    <ul class="site-footer__links">
+      {
+        SOCIALS.map(({ label, href, icon }) => (
+          <li>
+            <a
+              href={href}
+              aria-label={label}
+              rel={href.startsWith('http') ? 'me noopener' : undefined}
+            >
+              <Icon name={icon} size={17} />
+              <span>{label}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 5rem;
+    border-top: 1px solid var(--rule);
+    background: var(--paper-sunken);
+    padding-block: 2.5rem 3rem;
+  }
+
+  .site-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1.75rem;
+  }
+
+  .site-footer__name {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    margin: 0 0 0.35rem;
+  }
+
+  .site-footer__note {
+    margin: 0.15rem 0;
+  }
+
+  .site-footer__note a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--rule-strong);
+    text-underline-offset: 2px;
+  }
+
+  .site-footer__note a:hover {
+    text-decoration-color: var(--ink);
+  }
+
+  .site-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-footer__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .site-footer__links a:hover {
+    color: var(--ink);
+  }
+</style>

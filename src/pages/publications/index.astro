@@ -1,0 +1,102 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import PublicationCard from '@/components/PublicationCard.astro';
+import { getPublications, publicationsByYear } from '@/lib/content';
+
+const publications = await getPublications();
+const years = publicationsByYear(publications);
+
+const counts = {
+  total: publications.length,
+  conference: publications.filter((p) => p.data.type === 'conference').length,
+  preprint: publications.filter((p) => p.data.type === 'preprint').length,
+};
+---
+
+<PageLayout
+  title="Publications"
+  kicker={`${counts.total} papers`}
+  lede="Work on fair division, welfare maximization, online learning, and robust optimization."
+  description="Papers and preprints by Anand Krishna on fair division, online learning, and robust optimization."
+>
+  <dl class="tally">
+    <div><dt class="label">Total</dt><dd>{counts.total}</dd></div>
+    <div><dt class="label">Conference</dt><dd>{counts.conference}</dd></div>
+    <div><dt class="label">Preprints</dt><dd>{counts.preprint}</dd></div>
+  </dl>
+
+  {
+    years.map(([year, pubs]) => (
+      <section class="year" data-pagefind-body>
+        <h2 class="year__label">{year}</h2>
+        <div class="year__list">
+          {pubs.map((publication) => (
+            <PublicationCard publication={publication} />
+          ))}
+        </div>
+      </section>
+    ))
+  }
+
+  <p class="elsewhere">
+    Also on <a href="https://dblp.org/search?q=Anand+Krishna" class="marker-link" rel="noopener"
+      >DBLP</a
+    >.
+  </p>
+</PageLayout>
+
+<style>
+  .tally {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 3rem;
+    margin: 0 0 1rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid var(--rule);
+  }
+
+  .tally dt {
+    margin-bottom: 0.3rem;
+  }
+
+  .tally dd {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .year {
+    padding-block: 2.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .year:last-of-type {
+    border-bottom: 0;
+  }
+
+  .year__label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+    margin: 0 0 1.75rem;
+  }
+
+  .year__list {
+    display: grid;
+    gap: 2.25rem;
+  }
+
+  .elsewhere {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+</style>

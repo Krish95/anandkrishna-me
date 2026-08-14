@@ -1,0 +1,270 @@
+---
+import { render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+
+import Base from '@/layouts/Base.astro';
+import AuthorList from '@/components/AuthorList.astro';
+import Icon from '@/components/Icon.astro';
+import { getPublications } from '@/lib/content';
+import { mathToHtml, stripMath } from '@/lib/math';
+import { formatDate, isoDate } from '@/lib/format';
+
+export const getStaticPaths = (async () => {
+  const publications = await getPublications();
+  return publications.map((publication) => ({
+    params: { slug: publication.id },
+    props: { publication },
+  }));
+}) satisfies GetStaticPaths;
+
+const { publication } = Astro.props;
+const { title, authors, date, venue, type, summary, links, bibtex } = publication.data;
+const { Content } = await render(publication);
+
+const chips = [
+  links.pdf && { label: 'PDF', href: links.pdf, icon: 'file-text' as const },
+  links.arxiv && { label: 'arXiv', href: links.arxiv, icon: 'link' as const },
+  links.doi && { label: 'DOI', href: links.doi, icon: 'link' as const },
+  links.code && { label: 'Code', href: links.code, icon: 'github' as const },
+  links.video && { label: 'Video', href: links.video, icon: 'video' as const },
+  links.slides && { label: 'Slides', href: links.slides, icon: 'file-text' as const },
+  links.poster && { label: 'Poster', href: links.poster, icon: 'file-text' as const },
+].filter(Boolean) as { label: string; href: string; icon: 'file-text' | 'link' | 'github' | 'video' }[];
+---
+
+<Base
+  title={stripMath(title)}
+  description={stripMath(summary ?? `${title} — ${venue}`)}
+  ogImage={`/og/pub-${publication.id}.png`}
+>
+  <article class="shell paper" data-pagefind-body>
+    <a href="/publications" class="paper__back">
+      <Icon name="arrow-right" size={14} class="paper__back-icon" />
+      All publications
+    </a>
+
+    <p class="label paper__type">{type}</p>
+    <h1 class="paper__title" set:html={mathToHtml(title)} />
+
+    <div class="paper__meta">
+      <AuthorList authors={authors} />
+      <p class="paper__venue">
+        <span class="paper__venue-name">{venue}</span>
+        <span aria-hidden="true">·</span>
+        <time datetime={isoDate(date)}>{formatDate(date)}</time>
+      </p>
+    </div>
+
+    {
+      chips.length > 0 && (
+        <div class="paper__links">
+          {chips.map((chip) => (
+            <a class="button" href={chip.href} rel="noopener">
+              <Icon name={chip.icon} size={14} />
+              {chip.label}
+            </a>
+          ))}
+        </div>
+      )
+    }
+
+    <section class="paper__abstract">
+      <h2 class="label">Abstract</h2>
+      <div class="prose">
+        <Content />
+      </div>
+    </section>
+
+    {
+      bibtex && (
+        <section class="paper__cite">
+          <h2 class="label">Cite</h2>
+          <div class="cite-wrap">
+            <pre><code>{bibtex}</code></pre>
+            <button type="button" class="cite-copy" data-cite-copy>Copy</button>
+          </div>
+        </section>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  .paper {
+    padding-block: 3rem 1rem;
+    max-width: calc(var(--measure) + 6rem);
+  }
+
+  .paper__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-decoration: none;
+    margin-bottom: 2rem;
+  }
+
+  .paper__back:hover {
+    color: var(--ink);
+  }
+
+  .paper__back :global(.paper__back-icon) {
+    rotate: 180deg;
+  }
+
+  .paper__type {
+    margin: 0 0 0.7rem;
+    color: var(--ink-soft);
+  }
+
+  .paper__title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.85rem, 4.6vw, 2.7rem);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.024em;
+    margin: 0 0 1.5rem;
+    text-wrap: balance;
+  }
+
+  .paper__meta {
+    display: grid;
+    gap: 0.5rem;
+    padding-block: 1.25rem;
+    border-block: 1px solid var(--rule);
+  }
+
+  .paper__venue {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+  }
+
+  .paper__venue-name {
+    color: var(--ink);
+  }
+
+  .paper__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.75rem;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.85rem;
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #16232a;
+    background: var(--marker);
+    border: 1px solid color-mix(in srgb, var(--marker) 70%, black);
+    border-radius: var(--radius);
+    transition:
+      translate 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .button:hover {
+    translate: 0 -1px;
+    box-shadow: 3px 3px 0 var(--peach);
+  }
+
+  .paper__abstract,
+  .paper__cite {
+    margin-top: 3rem;
+  }
+
+  .paper__abstract .label,
+  .paper__cite .label {
+    margin: 0 0 1rem;
+  }
+
+  /* Abstracts run long and are full of maths — give them the reading measure. */
+  .paper__abstract .prose {
+    font-size: 1.05rem;
+  }
+
+  .cite-wrap {
+    position: relative;
+  }
+
+  .cite-wrap pre {
+    margin: 0;
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+
+  .cite-copy {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 0.35em 0.55em;
+    cursor: pointer;
+  }
+
+  .cite-copy:hover {
+    color: var(--ink);
+    border-color: var(--rule-strong);
+  }
+
+  .cite-copy[data-copied] {
+    background: var(--marker);
+    border-color: var(--marker);
+    color: #16232a;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-cite-copy]').forEach((button) => {
+    const code = button.parentElement?.querySelector('code');
+    if (!code) return;
+
+    let reset: ReturnType<typeof setTimeout> | undefined;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(code.textContent ?? '');
+        button.textContent = 'Copied';
+        button.dataset.copied = '';
+      } catch {
+        button.textContent = 'Failed';
+      }
+      clearTimeout(reset);
+      reset = setTimeout(() => {
+        button.textContent = 'Copy';
+        delete button.dataset.copied;
+      }, 2000);
+    });
+  });
+</script>

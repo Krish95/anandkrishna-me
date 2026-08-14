@@ -1,0 +1,234 @@
+---
+title: Everything you can write in this theme
+description: A reference post that exercises every markdown feature and component the site supports. Keep it, or delete it once you've stopped needing the cheat sheet.
+pubDate: 2026-08-14
+tags: ['meta', 'reference']
+---
+
+This post exists as a working cheat sheet. Every feature below is enabled in
+`astro.config.ts` and styled in `src/styles/global.css`. If something here looks
+wrong, the styling is wrong — not your post.
+
+<Callout type="note" title="Delete me eventually">
+  This is documentation disguised as a blog post. It's set `featured: false` so
+  it stays off the homepage. Delete the file when you no longer need it.
+</Callout>
+
+## Text and inline marks
+
+Standard emphasis works: *italic*, **bold**, ***both***, ~~struck through~~, and
+`inline code`. Smart punctuation is on, so "straight quotes" curl, -- becomes an
+en dash, --- an em dash, and ... an ellipsis.
+
+Superscript and subscript are enabled: 10^6^ and H~2~O.
+
+Links get a highlighter sweep on hover — [like this one](https://astro.build).
+
+Keyboard keys aren't markdown, but the styling exists if you write the HTML:
+<kbd>⌘</kbd> + <kbd>K</kbd>.
+
+## Headings and anchors
+
+Every `h2`–`h4` gets a slugified `id` automatically, plus a `#` anchor that
+appears on hover — both at build time, via `rehype-heading-ids` and
+`rehype-autolink-headings`.
+
+<Callout type="note" title="Need a permanent anchor?">
+  Ids are derived from the heading text, so rewording a heading breaks any link
+  to it. When a URL has to survive edits, write the tag yourself:
+  `<h3 id="stable-anchor">Heading</h3>`.
+</Callout>
+
+#### Fourth-level headings
+
+These render as small uppercase labels rather than another serif size — useful
+for breaking up a long section without implying a new topic.
+
+## Lists
+
+Unordered lists use a small peach diamond:
+
+- First item
+- Second item, with a nested list
+  - Nested one
+  - Nested two
+- Third item
+
+Ordered lists use monospace numerals:
+
+1. Do the first thing
+2. Then the second
+3. Then the third
+
+Task lists work (GFM):
+
+- [x] Ship the site
+- [x] Write the reference post
+- [ ] Delete the reference post
+
+## Quotes
+
+> Blockquotes get a marker-yellow rule and italic text. Good for a pull quote or
+> someone else's sentence you're arguing with.
+
+## Code
+
+Plain fenced code with a language gets syntax highlighting in both themes:
+
+```py
+def reading_time(words: int, wpm: int = 220) -> int:
+    return max(1, round(words / wpm))
+```
+
+Add `title="…"` for a filename header, `showLineNumbers` for a numbered gutter,
+and `{}` to highlight specific lines:
+
+```ts title="src/lib/example.ts" showLineNumbers {3-5}
+export function slugify(input: string): string {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+```
+
+Inline notation comments give you diffs, focus, and error levels:
+
+```ts title="Notation demo"
+const config = {
+  retries: 3, // [!code --]
+  retries: 5, // [!code ++]
+  timeout: 30_000, // [!code highlight]
+  endpoint: undefined, // [!code error]
+  cache: 'maybe', // [!code warning]
+};
+```
+
+Focus dims everything else until you hover:
+
+```ts
+setup();
+const result = doTheImportantThing(); // [!code focus]
+teardown();
+```
+
+## Tables
+
+Wide tables scroll inside their own box rather than widening the page:
+
+| Feature | Enabled by | Where to change it |
+|---|---|---|
+| GFM tables, footnotes, task lists | `unified({ gfm: true })` | `astro.config.ts` |
+| Smart punctuation | `unified({ smartypants: true })` | `astro.config.ts` |
+| Maths | `remark-math` + `rehype-katex` | `astro.config.ts` |
+| Heading ids and anchors | `rehype-heading-ids` + `rehype-autolink-headings` | `astro.config.ts` |
+| Code themes and notation | Shiki + transformers | `astro.config.ts` |
+| Filename tabs, line numbers | `transformerCodeTitle` | `src/lib/shiki-code-title.ts` |
+| Callouts, figures, asides | MDX components | `src/components/mdx/` |
+
+## Components
+
+These four are available in any `.mdx` post with no import needed — they're
+passed in by `src/pages/blog/[...slug].astro`.
+
+<Callout type="note">A note, with no title.</Callout>
+
+<Callout type="tip" title="Tip">
+  Callouts accept full markdown inside, including [links](/blog) and `code`.
+</Callout>
+
+<Callout type="warning" title="Warning">
+  Four types: `note`, `tip`, `warning`, `danger`. Pass `title={false}` to hide
+  the heading entirely.
+</Callout>
+
+<Callout type="danger" title="Heads up">
+  The loudest one. Use it rarely or it stops working.
+</Callout>
+
+`<Aside>` puts a margin note in the right gutter on wide screens and folds it
+inline on narrow ones.
+
+<Aside>
+  Like this. On a wide window it sits out in the margin next to the paragraph
+  that introduced it.
+</Aside>
+
+For images, use `<Figure>` with an imported asset so Astro optimises it:
+
+```mdx
+import diagram from './diagram.png';
+
+<Figure src={diagram} alt="How the pipeline fans out" caption="Fan-out, then merge." width="wide" />
+```
+
+`alt` is required by the component's props, and `heroAlt` is required by the
+content schema whenever a post sets `hero` — both enforced at build time, so an
+unlabelled image fails the build rather than shipping.
+
+For video and embeds, `<Embed>` keeps a fixed aspect box so nothing jumps:
+
+```mdx
+<Embed src="https://www.youtube-nocookie.com/embed/VIDEO_ID" title="Demo walkthrough" />
+```
+
+## Maths
+
+Inline maths with single dollars: the $p$-mean welfare interpolates between
+social welfare at $p = 1$ and egalitarian welfare as $p \to -\infty$.
+
+Display maths with double dollars:
+
+$$
+\mathrm{NSW}(x) = \left(\prod_{i=1}^{n} v_i(x_i)\right)^{1/n}
+$$
+
+Long expressions scroll inside their own box rather than widening the page:
+
+$$
+\tilde{O}\left(\sqrt{\frac{k}{T^{\frac{1}{2|p|}}}}\right) \quad \text{for } p \leq -1,
+\qquad
+\tilde{O}\left(\sqrt{\frac{k^{1.5}}{T^{\frac{1}{2}}}}\right) \quad \text{for } -1 < p < 0
+$$
+
+Rendered by KaTeX at build time, so there's no maths JavaScript in the page.
+MathML is emitted alongside the visual output, which means screen readers get
+real equations rather than a pile of glyphs.
+
+<Callout type="tip" title="Writing dollar signs">
+  A literal `$` in prose needs escaping as `\$`, or `remark-math` will try to
+  open an inline maths span.
+</Callout>
+
+## Footnotes
+
+Footnotes collect at the bottom with a return link.[^why] You can reference the
+same one twice,[^why] and they're numbered automatically.[^second]
+
+[^why]: This is a footnote. GFM footnote syntax, handled natively by Sätteri.
+[^second]: A second one, to show the ordering.
+
+## Frontmatter reference
+
+Everything the schema accepts, with the required fields first:
+
+```yaml
+---
+title: Required, max 120 chars
+description: Required, max 300 chars — used in meta tags, lists, RSS, and the OG image
+pubDate: 2026-08-14
+# Optional from here down:
+updatedDate: 2026-08-20
+tags: ['one', 'two']
+draft: false        # true = visible in dev, excluded from the production build
+featured: false     # true = surfaces on the homepage
+series: Building Poiro
+toc: true           # false = no outline rail
+hero: ./cover.jpg   # relative to the post file; requires heroAlt
+heroAlt: Description of the cover image
+---
+```
+
+Validation runs at build time via Zod, so a typo in a field name or a missing
+`heroAlt` fails the build with a pointer to the file.

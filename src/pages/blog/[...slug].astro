@@ -1,0 +1,32 @@
+---
+import { render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+
+import PostLayout from '@/layouts/PostLayout.astro';
+import Callout from '@/components/mdx/Callout.astro';
+import Figure from '@/components/mdx/Figure.astro';
+import Aside from '@/components/mdx/Aside.astro';
+import Embed from '@/components/mdx/Embed.astro';
+import { getPosts, neighbours } from '@/lib/content';
+
+export const getStaticPaths = (async () => {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post, ...neighbours(posts, post.id) },
+  }));
+}) satisfies GetStaticPaths;
+
+const { post, prev, next } = Astro.props;
+const { Content, headings } = await render(post);
+
+/**
+ * Made available to every MDX post without an import, so writing a post doesn't
+ * start with a block of boilerplate. Importing them explicitly still works.
+ */
+const components = { Callout, Figure, Aside, Embed };
+---
+
+<PostLayout post={post} headings={headings} prev={prev} next={next}>
+  <Content components={components} />
+</PostLayout>

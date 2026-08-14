@@ -1,0 +1,178 @@
+---
+import type { Publication } from '@/lib/content';
+import { mathToHtml } from '@/lib/math';
+import AuthorList from './AuthorList.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  publication: Publication;
+  /** `compact` drops the summary line — used on the homepage. */
+  variant?: 'full' | 'compact';
+}
+
+const { publication, variant = 'full' } = Astro.props;
+const { title, authors, venue, type, summary, links } = publication.data;
+const href = `/publications/${publication.id}`;
+
+const TYPE_LABEL: Record<Publication['data']['type'], string> = {
+  conference: 'Conference',
+  journal: 'Journal',
+  preprint: 'Preprint',
+  thesis: 'Thesis',
+  workshop: 'Workshop',
+};
+
+// Only render link chips that actually exist in frontmatter.
+const chips = [
+  links.pdf && { label: 'PDF', href: links.pdf, icon: 'file-text' as const },
+  links.arxiv && { label: 'arXiv', href: links.arxiv, icon: 'link' as const },
+  links.doi && { label: 'DOI', href: links.doi, icon: 'link' as const },
+  links.code && { label: 'Code', href: links.code, icon: 'github' as const },
+  links.video && { label: 'Video', href: links.video, icon: 'video' as const },
+  links.slides && { label: 'Slides', href: links.slides, icon: 'file-text' as const },
+].filter((c): c is { label: string; href: string; icon: 'file-text' | 'link' | 'github' | 'video' } =>
+  Boolean(c),
+);
+---
+
+<article class="pub">
+  <div class="pub__head">
+    <h3 class="pub__title">
+      {/* Titles carry inline LaTeX (e.g. "$p$-Mean Regret"), so render it. */}
+      <a href={href} class="marker-link" set:html={mathToHtml(title)} />
+    </h3>
+    <span class="pub__type" data-type={type}>{TYPE_LABEL[type]}</span>
+  </div>
+
+  <AuthorList authors={authors} />
+
+  <p class="pub__venue">{venue}</p>
+
+  {variant === 'full' && summary && <p class="pub__summary" set:html={mathToHtml(summary)} />}
+
+  <div class="pub__actions">
+    <a class="pub__action" href={href}>Abstract</a>
+    {
+      chips.map((chip) => (
+        <a class="pub__action" href={chip.href} rel="noopener">
+          <Icon name={chip.icon} size={13} />
+          {chip.label}
+        </a>
+      ))
+    }
+  </div>
+</article>
+
+<style>
+  .pub {
+    display: grid;
+    gap: 0.4rem;
+    padding-left: 1.1rem;
+    /* Thick left rule — the paper's spine. */
+    border-left: 4px solid var(--rule);
+    transition: border-color 180ms ease;
+  }
+
+  .pub:hover {
+    border-left-color: var(--marker);
+  }
+
+  .pub__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.9rem;
+  }
+
+  .pub__title {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.012em;
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .pub__type {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    padding: 0.28em 0.5em;
+    border-radius: 2px;
+    white-space: nowrap;
+    color: #16232a;
+    flex: none;
+  }
+
+  .pub__type[data-type='conference'] {
+    background: var(--mint);
+  }
+
+  .pub__type[data-type='journal'] {
+    background: var(--sky);
+  }
+
+  .pub__type[data-type='preprint'] {
+    background: var(--marker);
+  }
+
+  .pub__type[data-type='workshop'] {
+    background: var(--lilac);
+  }
+
+  .pub__type[data-type='thesis'] {
+    background: var(--peach);
+  }
+
+  .pub__venue {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    color: var(--ink-faint);
+  }
+
+  .pub__summary {
+    margin: 0.35rem 0 0;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    max-width: 68ch;
+    text-wrap: pretty;
+  }
+
+  .pub__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .pub__action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink-soft);
+    padding: 0.32em 0.55em;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      border-color 150ms ease;
+  }
+
+  .pub__action:hover {
+    background: var(--marker);
+    border-color: var(--marker);
+    color: #16232a;
+  }
+</style>

@@ -1,0 +1,23 @@
+---
+/**
+ * Applies the stored theme before first paint.
+ *
+ * Must be rendered inside `<head>` and stay `is:inline` — if Astro bundled and
+ * deferred it, the page would paint in the wrong theme first (the classic
+ * flash). Nothing is written to the DOM when the user is on "system", so the
+ * CSS `prefers-color-scheme` rules take over.
+ */
+---
+
+<script is:inline>
+  (function () {
+    try {
+      var stored = localStorage.getItem('theme');
+      if (stored === 'light' || stored === 'dark') {
+        document.documentElement.dataset.theme = stored;
+      }
+    } catch (_) {
+      /* private mode / storage disabled — fall through to the OS preference */
+    }
+  })();
+</script>

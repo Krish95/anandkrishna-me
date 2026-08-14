@@ -1,0 +1,42 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import Tag from '@/components/Tag.astro';
+import { getTags } from '@/lib/content';
+
+const tags = await getTags();
+---
+
+<PageLayout
+  title="Topics"
+  kicker={`${tags.length} ${tags.length === 1 ? 'topic' : 'topics'}`}
+  lede="Everything I've written, sorted by what it's about."
+>
+  {
+    tags.length === 0 ? (
+      <p class="empty">No tags yet — add some to a post's frontmatter.</p>
+    ) : (
+      <ul class="cloud">
+        {tags.map(({ tag, count }) => (
+          <li>
+            <Tag tag={tag} count={count} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</PageLayout>
+
+<style>
+  .cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .empty {
+    color: var(--ink-soft);
+  }
+</style>

@@ -1,0 +1,119 @@
+---
+import type { GetStaticPaths } from 'astro';
+
+import PageLayout from '@/layouts/PageLayout.astro';
+import Tag from '@/components/Tag.astro';
+import { getPosts, getTags, tagSlug } from '@/lib/content';
+import { formatDateShort, isoDate } from '@/lib/format';
+
+export const getStaticPaths = (async () => {
+  const [posts, tags] = await Promise.all([getPosts(), getTags()]);
+
+  return tags.map(({ tag, slug }) => ({
+    params: { tag: slug },
+    props: {
+      tag,
+      posts: posts.filter((post) => post.data.tags.some((t) => tagSlug(t) === slug)),
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { tag, posts } = Astro.props;
+---
+
+<PageLayout
+  title={tag}
+  kicker="Topic"
+  description={`Posts tagged ${tag}.`}
+  lede={`${posts.length} ${posts.length === 1 ? 'post' : 'posts'} tagged “${tag}”.`}
+>
+  <ul class="list">
+    {
+      posts.map((post) => (
+        <li class="entry">
+          <time class="meta entry__date" datetime={isoDate(post.data.pubDate)}>
+            {formatDateShort(post.data.pubDate)}
+          </time>
+          <div>
+            <h2 class="entry__title">
+              <a href={`/blog/${post.id}`} class="marker-link">
+                {post.data.title}
+              </a>
+            </h2>
+            <p class="entry__desc">{post.data.description}</p>
+            <ul class="entry__tags">
+              {post.data.tags.map((t) => (
+                <li>
+                  <Tag tag={t} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="back"><a href="/tags" class="marker-link">All topics</a></p>
+</PageLayout>
+
+<style>
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2.25rem;
+  }
+
+  .entry {
+    display: grid;
+    gap: 0.3rem 2rem;
+  }
+
+  @media (width >= 40rem) {
+    .entry {
+      grid-template-columns: 6rem minmax(0, 1fr);
+    }
+  }
+
+  .entry__date {
+    white-space: nowrap;
+    padding-top: 0.3rem;
+  }
+
+  .entry__title {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0 0 0.35rem;
+    text-wrap: balance;
+  }
+
+  .entry__desc {
+    margin: 0;
+    color: var(--ink-soft);
+    max-width: 60ch;
+    text-wrap: pretty;
+  }
+
+  .entry__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0.7rem 0 0;
+    padding: 0;
+  }
+
+  .back {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+</style>

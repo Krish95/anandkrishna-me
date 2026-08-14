@@ -1,0 +1,41 @@
+---
+import { SITE } from '@/site.config';
+
+interface Props {
+  authors: string[];
+}
+
+/**
+ * Author list with the site owner's own name emphasised — the convention on
+ * academic pages, and the fastest way for a reader to find your position in a
+ * four-author list.
+ */
+const { authors } = Astro.props;
+---
+
+<p class="authors">
+  {
+    authors.map((author, i) => (
+      <>
+        {i > 0 && <span class="authors__sep">, </span>}
+        <span class:list={['authors__name', author === SITE.author.name && 'is-me']}>{author}</span>
+      </>
+    ))
+  }
+</p>
+
+<style>
+  .authors {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  .authors__name.is-me {
+    color: var(--ink);
+    font-weight: 650;
+    /* A short marker stroke under your own name. */
+    box-shadow: inset 0 -0.32em 0 var(--marker-wash);
+  }
+</style>

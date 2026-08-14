@@ -1,0 +1,136 @@
+---
+import type { MarkdownHeading } from '@astrojs/internal-helpers/markdown';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+// h1 belongs to the page title; h4+ makes the rail too noisy.
+const items = Astro.props.headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  items.length > 1 && (
+    <nav class="toc" aria-labelledby="toc-heading">
+      <p class="label" id="toc-heading">On this page</p>
+      <ul>
+        {items.map((h) => (
+          <li data-depth={h.depth}>
+            <a href={`#${h.slug}`} data-toc-link={h.slug}>
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<style>
+  .toc {
+    position: sticky;
+    top: 5rem;
+    /* Never let a long outline push past the viewport. */
+    max-height: calc(100vh - 7rem);
+    overflow-y: auto;
+    padding-left: 0.9rem;
+    border-left: 1px solid var(--rule);
+    scrollbar-width: thin;
+  }
+
+  .toc p {
+    margin: 0 0 0.6rem;
+  }
+
+  .toc ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .toc li[data-depth='3'] {
+    padding-left: 0.85rem;
+  }
+
+  .toc a {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    padding: 0.3rem 0;
+    color: var(--ink-faint);
+    text-decoration: none;
+    transition: color 150ms ease;
+    text-wrap: pretty;
+  }
+
+  .toc a:hover {
+    color: var(--ink);
+  }
+
+  .toc a[aria-current='true'] {
+    color: var(--ink);
+    box-shadow: inset 0 -0.3em 0 var(--marker-wash);
+  }
+</style>
+
+<script>
+  /**
+   * Highlights the heading currently in view.
+   *
+   * Tracks the last heading whose top edge crossed the reading line rather than
+   * whichever entry happens to be intersecting — that keeps exactly one item lit
+   * while scrolling in either direction.
+   */
+  const links = new Map<string, HTMLAnchorElement>();
+  document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]').forEach((link) => {
+    links.set(link.dataset.tocLink!, link);
+  });
+
+  if (links.size > 0) {
+    const headings = [...links.keys()]
+      .map((slug) => document.getElementById(slug))
+      .filter((el): el is HTMLElement => el !== null);
+
+    let current: string | null = null;
+
+    const setCurrent = (slug: string | null) => {
+      if (slug === current) return;
+      if (current) links.get(current)?.removeAttribute('aria-current');
+      if (slug) links.get(slug)?.setAttribute('aria-current', 'true');
+      current = slug;
+    };
+
+    const update = () => {
+      // The reading line sits below the sticky header.
+      const line = 100;
+      let active: string | null = null;
+      for (const heading of headings) {
+        if (heading.getBoundingClientRect().top <= line) {
+          active = heading.id;
+        } else {
+          break;
+        }
+      }
+      // Before the first heading scrolls past, light the first item.
+      setCurrent(active ?? headings[0]?.id ?? null);
+    };
+
+    let queued = false;
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        update();
+      });
+    };
+
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+  }
+</script>

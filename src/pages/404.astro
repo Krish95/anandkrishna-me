@@ -1,0 +1,98 @@
+---
+import Base from '@/layouts/Base.astro';
+import Icon from '@/components/Icon.astro';
+---
+
+<Base title="Not found" description="That page doesn't exist." noindex>
+  <div class="shell notfound">
+    <p class="notfound__code">404</p>
+    <h1 class="notfound__title">This page isn't here.</h1>
+    <p class="notfound__text">
+      Either it moved, or it never existed. Both happen. Try the writing index or search.
+    </p>
+    <div class="notfound__actions">
+      <a class="button" href="/blog">
+        Writing
+        <Icon name="arrow-right" size={15} />
+      </a>
+      <a class="button" data-variant="ghost" href="/search">
+        <Icon name="search" size={14} />
+        Search
+      </a>
+      <a class="button" data-variant="ghost" href="/">Home</a>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .notfound {
+    padding-block: 7rem 8rem;
+    max-width: 40rem;
+  }
+
+  .notfound__code {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    color: var(--ink-faint);
+    margin: 0 0 1rem;
+  }
+
+  .notfound__title {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    margin: 0 0 1rem;
+    text-wrap: balance;
+  }
+
+  .notfound__text {
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    margin: 0 0 2rem;
+    text-wrap: pretty;
+  }
+
+  .notfound__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #16232a;
+    background: var(--marker);
+    border: 1px solid color-mix(in srgb, var(--marker) 70%, black);
+    border-radius: var(--radius);
+    transition:
+      translate 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .button:hover {
+    translate: 0 -1px;
+    box-shadow: 3px 3px 0 var(--peach);
+  }
+
+  .button[data-variant='ghost'] {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--rule-strong);
+  }
+
+  .button[data-variant='ghost']:hover {
+    box-shadow: 3px 3px 0 var(--marker);
+  }
+</style>

@@ -1,0 +1,44 @@
+# Redirects from the old Wowchemy/Hugo site so existing links and search-engine
+# results keep working. Cloudflare Pages reads this file from the output root.
+# Format: <from> <to> <status>. First match wins, so specific rules go first.
+
+# --- Publications: slugs changed to be self-describing --------------------
+/publication/barik-2024-robust      /publications/barik-2024-robust-phase-retrieval  301
+/publication/anand-2024-pmean       /publications/anand-2024-p-mean-regret           301
+/publication/anand-2024-learn       /publications/anand-2024-learn                   301
+/publication/barman-2021-sublinear  /publications/barman-2023-sublinear-nsw-xos      301
+/publication/barman2022fair         /publications/barman-2022-nash-welfare-coverage  301
+/publication/barman-2022-achieving  /publications/barman-2022-envy-freeness-subsidies 301
+/publication/barman-tight-2020      /publications/barman-2020-tight-p-mean-welfare   301
+
+# Any other old publication URL lands on the index rather than a 404.
+/publication/*         /publications  301
+/publication           /publications  301
+/publication-type/*    /publications  301
+/publication_types     /publications  301
+/publication_types/*   /publications  301
+
+# --- Sections that moved or no longer exist -------------------------------
+/post/*        /blog       301
+/post          /blog       301
+/project/*     /projects   301
+/project       /projects   301
+/tag/*         /tags       301
+/category/*    /tags       301
+/categories    /tags       301
+
+# Talks, slides and events aren't modelled on the new site yet — send them home
+# instead of leaving a dead end.
+/talk/*        /           301
+/talk          /           301
+/slides/*      /           301
+/slides        /           301
+/event/*       /           301
+/event         /           301
+
+# The Wowchemy CMS admin panel is gone.
+/admin         /           301
+/admin/*       /           301
+
+# Old Hugo feed path.
+/index.xml     /rss.xml    301

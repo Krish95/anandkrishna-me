@@ -1,0 +1,179 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import Tag from '@/components/Tag.astro';
+import { getPosts, getTags } from '@/lib/content';
+import { formatDateShort, isoDate, readingTime } from '@/lib/format';
+
+const posts = await getPosts();
+const tags = await getTags();
+
+/**
+ * Grouped by year rather than paginated: the whole archive stays one page, so
+ * it's searchable with ⌘F and there's no page-2 to fall off the edge of.
+ */
+const byYear = new Map<number, typeof posts>();
+for (const post of posts) {
+  const year = post.data.pubDate.getUTCFullYear();
+  const bucket = byYear.get(year);
+  if (bucket) bucket.push(post);
+  else byYear.set(year, [post]);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+---
+
+<PageLayout
+  title="Writing"
+  kicker={`${posts.length} ${posts.length === 1 ? 'post' : 'posts'}`}
+  lede="Occasional notes on algorithms, fair division, learning theory, and whatever else is currently on the whiteboard."
+>
+  {
+    tags.length > 0 && (
+      <div class="filters">
+        <p class="label">Topics</p>
+        <ul class="filters__list">
+          {tags.map(({ tag, count }) => (
+            <li>
+              <Tag tag={tag} count={count} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  {
+    posts.length === 0 && (
+      <p class="empty">
+        Nothing published yet. Add an <code>.mdx</code> file under
+        <code>src/content/posts/</code> to get going.
+      </p>
+    )
+  }
+
+  {
+    years.map((year) => (
+      <section class="year">
+        <h2 class="year__label">{year}</h2>
+        <ul class="year__list">
+          {byYear.get(year)!.map((post) => (
+            <li class="entry">
+              <time class="meta entry__date" datetime={isoDate(post.data.pubDate)}>
+                {formatDateShort(post.data.pubDate)}
+              </time>
+              <div class="entry__main">
+                <h3 class="entry__title">
+                  <a href={`/blog/${post.id}`} class="marker-link">
+                    {post.data.title}
+                  </a>
+                </h3>
+                <p class="entry__desc">{post.data.description}</p>
+                <p class="meta entry__read">{readingTime(post.body)} min read</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</PageLayout>
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem 1.25rem;
+    padding-bottom: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .filters .label {
+    margin: 0;
+  }
+
+  .filters__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .empty {
+    color: var(--ink-soft);
+  }
+
+  .empty code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--paper-sunken);
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+  }
+
+  .year {
+    padding-block: 2.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .year:last-of-type {
+    border-bottom: 0;
+  }
+
+  .year__label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    margin: 0 0 1.5rem;
+  }
+
+  .year__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2rem;
+  }
+
+  .entry {
+    display: grid;
+    gap: 0.3rem 2rem;
+  }
+
+  @media (width >= 40rem) {
+    .entry {
+      grid-template-columns: 6rem minmax(0, 1fr);
+    }
+  }
+
+  .entry__date {
+    white-space: nowrap;
+    padding-top: 0.3rem;
+  }
+
+  .entry__title {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.35rem;
+    text-wrap: balance;
+  }
+
+  .entry__desc {
+    margin: 0;
+    color: var(--ink-soft);
+    max-width: 60ch;
+    text-wrap: pretty;
+  }
+
+  .entry__read {
+    margin: 0.5rem 0 0;
+    color: var(--ink-faint);
+  }
+</style>

@@ -1,0 +1,24 @@
+---
+import { SITE } from '@/site.config';
+
+/**
+ * Cloudflare Web Analytics.
+ *
+ * Cookieless and collects no personal data, so it needs no consent banner.
+ * Renders nothing at all until a token is set in `src/site.config.ts`, and
+ * stays out of dev builds so local page views never hit the stats.
+ */
+const token = SITE.analytics.cloudflareToken;
+const enabled = Boolean(token) && import.meta.env.PROD;
+---
+
+{
+  enabled && (
+    <script
+      is:inline
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon={JSON.stringify({ token })}
+    />
+  )
+}

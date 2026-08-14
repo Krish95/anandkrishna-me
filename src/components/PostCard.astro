@@ -1,0 +1,133 @@
+---
+import { Image } from 'astro:assets';
+import type { Post } from '@/lib/content';
+import { formatDate, isoDate, readingTime } from '@/lib/format';
+import Tag from './Tag.astro';
+
+interface Props {
+  post: Post;
+  /** `feature` adds the hero image and a larger title. */
+  variant?: 'row' | 'feature';
+}
+
+const { post, variant = 'row' } = Astro.props;
+const { title, description, pubDate, tags, hero, heroAlt, series } = post.data;
+const href = `/blog/${post.id}`;
+const minutes = readingTime(post.body);
+---
+
+<article class="card" data-variant={variant}>
+  {
+    variant === 'feature' && hero && (
+      <a href={href} class="card__media" tabindex="-1" aria-hidden="true">
+        <Image src={hero} alt={heroAlt ?? ''} width={720} height={405} loading="lazy" />
+      </a>
+    )
+  }
+
+  <div class="card__body">
+    <p class="meta card__meta">
+      <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
+      <span aria-hidden="true">·</span>
+      <span>{minutes} min read</span>
+      {
+        series && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span class="card__series">{series}</span>
+          </>
+        )
+      }
+    </p>
+
+    <h3 class="card__title">
+      <a href={href} class="marker-link">{title}</a>
+    </h3>
+
+    <p class="card__desc">{description}</p>
+
+    {
+      tags.length > 0 && (
+        <ul class="card__tags">
+          {tags.map((tag) => (
+            <li>
+              <Tag tag={tag} />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .card {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .card__media {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    /* Offset colour block behind the image — the riso-print motif. */
+    position: relative;
+  }
+
+  .card__media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    transition: scale 400ms ease;
+  }
+
+  .card:hover .card__media img {
+    scale: 1.02;
+  }
+
+  .card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0 0 0.4rem;
+  }
+
+  .card__series {
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+
+  .card__title {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    margin: 0 0 0.4rem;
+    font-size: 1.25rem;
+    text-wrap: balance;
+  }
+
+  .card[data-variant='feature'] .card__title {
+    font-size: 1.6rem;
+  }
+
+  .card__desc {
+    margin: 0;
+    color: var(--ink-soft);
+    max-width: 60ch;
+    text-wrap: pretty;
+  }
+
+  .card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0.85rem 0 0;
+    padding: 0;
+  }
+</style>

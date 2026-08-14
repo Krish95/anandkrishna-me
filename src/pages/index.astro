@@ -1,0 +1,645 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+import Base from '@/layouts/Base.astro';
+import Band from '@/components/Band.astro';
+import PublicationCard from '@/components/PublicationCard.astro';
+import Icon from '@/components/Icon.astro';
+import { SITE, SOCIALS } from '@/site.config';
+import { getFeaturedPublications, getNotes, getPosts, getPublications } from '@/lib/content';
+import { cv } from '@/data/cv';
+import { mathToHtml } from '@/lib/math';
+import { formatDateShort, isoDate } from '@/lib/format';
+
+/**
+ * Optional portrait: drop any of these at `src/assets/portrait.*` and it appears
+ * automatically. Globbing rather than importing directly means the build doesn't
+ * break when the file isn't there yet.
+ */
+const portraits = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/portrait.{jpg,jpeg,png,webp,avif}',
+  { eager: true },
+);
+const portrait = Object.values(portraits)[0]?.default;
+
+const [featured, allPublications, notes, posts] = await Promise.all([
+  getFeaturedPublications(3),
+  getPublications(),
+  getNotes(5),
+  getPosts(),
+]);
+---
+
+<Base title={SITE.title}>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="shell hero__inner">
+      <div class="hero__text">
+        <h1 class="hero__name">{SITE.author.name}</h1>
+
+        <p class="hero__role">
+          {/* `&#32;` rather than a newline: Astro 7 compresses whitespace with JSX
+              rules, which would drop the space before the link entirely. */}
+          {SITE.author.role} at&#32;
+          <a href={SITE.author.affiliationUrl} class="marker-link" rel="noopener"
+            >{SITE.author.affiliation}</a
+          >
+        </p>
+
+        <p class="hero__tagline">{SITE.author.tagline}</p>
+
+        <ul class="hero__links">
+          {
+            SOCIALS.map(({ label, href, icon }) => (
+              <li>
+                <a href={href} rel={href.startsWith('http') ? 'me noopener' : undefined}>
+                  <Icon name={icon} size={16} />
+                  <span>{label}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="hero__cta">
+          <a href="/publications" class="button">
+            {allPublications.length} publications
+            <Icon name="arrow-right" size={15} />
+          </a>
+          {
+            cv.resumeUrl && (
+              <a href={cv.resumeUrl} class="button" data-variant="ghost" rel="noopener">
+                CV
+                <Icon name="arrow-up-right" size={14} />
+              </a>
+            )
+          }
+        </div>
+      </div>
+
+      {
+        portrait && (
+          <div class="hero__aside">
+            <div class="portrait">
+              <Image
+                src={portrait}
+                alt={SITE.author.portraitAlt}
+                width={440}
+                height={440}
+                loading="eager"
+              />
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- About + interests -->
+  <Band tone="mint" id="about">
+    <div class="about">
+      <div class="about__text">
+        <p class="label about__label">About</p>
+        <p>
+          I am a Postdoctoral Research Fellow at the <a
+            href="https://nus.edu.sg/"
+            class="marker-link"
+            rel="noopener">National University of Singapore</a
+          > working with Prof. Vincent Y. F. Tan.
+        </p>
+        <p>
+          Previously, I was a Prime Minister's Research Fellow (PMRF) in the Department of Computer
+          Science and Automation at the <a
+            href="https://iisc.ac.in/"
+            class="marker-link"
+            rel="noopener">Indian Institute of Science</a
+          >, where I obtained my Ph.D. I was fortunate to be advised by Prof. Y. Narahari and Assoc.
+          Prof. Siddharth Barman.
+        </p>
+      </div>
+
+      <div class="about__side">
+        <p class="label">Interests</p>
+        <ul class="interests">
+          {SITE.interests.map((interest) => <li>{interest}</li>)}
+        </ul>
+
+        <p class="label about__side-label">Education</p>
+        <ul class="education">
+          {
+            cv.education.map((study) => (
+              <li>
+                <span class="education__what">{study.qualification}</span>
+                <span class="meta education__where">
+                  {study.institution} · {study.end}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </Band>
+
+  <!-- Selected publications -->
+  {
+    featured.length > 0 && (
+      <Band
+        title="Selected work"
+        link={{ label: 'All publications', href: '/publications' }}
+        id="work"
+      >
+        <div class="pubs">
+          {featured.map((publication) => (
+            <PublicationCard publication={publication} />
+          ))}
+        </div>
+      </Band>
+    )
+  }
+
+  <!-- News -->
+  {
+    notes.length > 0 && (
+      <Band tone="butter" title="News" id="news">
+        <ul class="notes">
+          {notes.map((note) => (
+            <li class="note">
+              <time class="meta note__date" datetime={isoDate(note.data.date)}>
+                {formatDateShort(note.data.date)}
+              </time>
+              <p class="note__text">
+                {note.data.href ? (
+                  <a
+                    href={note.data.href}
+                    class="marker-link"
+                    rel="noopener"
+                    set:html={mathToHtml(note.data.text)}
+                  />
+                ) : (
+                  <Fragment set:html={mathToHtml(note.data.text)} />
+                )}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </Band>
+    )
+  }
+
+  <!-- Teaching -->
+  <Band tone="sunken" title="Teaching" id="teaching">
+    <ul class="teaching">
+      {
+        cv.teaching.map((course) => (
+          <li class="course">
+            <div>
+              <p class="course__title">{course.title}</p>
+              <p class="meta course__where">
+                {course.institution}
+                {course.role && <span class="course__role"> · {course.role}</span>}
+              </p>
+            </div>
+            <p class="meta course__when">{course.when}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Band>
+
+  <!-- Writing, only when there is something to show -->
+  {
+    posts.length > 0 && (
+      <Band title="Writing" link={{ label: 'All posts', href: '/blog' }} id="writing">
+        <ul class="writing">
+          {posts.slice(0, 3).map((post) => (
+            <li class="entry">
+              <time class="meta entry__date" datetime={isoDate(post.data.pubDate)}>
+                {formatDateShort(post.data.pubDate)}
+              </time>
+              <div>
+                <h3 class="entry__title">
+                  <a href={`/blog/${post.id}`} class="marker-link">
+                    {post.data.title}
+                  </a>
+                </h3>
+                <p class="entry__desc">{post.data.description}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </Band>
+    )
+  }
+
+  <!-- Contact -->
+  <Band tone="blush" id="contact">
+    <div class="contact">
+      <h2 class="contact__title"><span class="struck">Get in touch</span></h2>
+      <p class="contact__text">
+        Happy to talk about fair division, online learning, or anything adjacent — email is best.
+      </p>
+      <a class="button" href={`mailto:${SITE.author.email}`}>
+        {SITE.author.email}
+        <Icon name="arrow-up-right" size={15} />
+      </a>
+    </div>
+  </Band>
+</Base>
+
+<style>
+  /* --- Hero -------------------------------------------------------------- */
+
+  .hero {
+    padding-block: 5rem 4.5rem;
+  }
+
+  .hero__inner {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (width >= 48rem) {
+    .hero__inner {
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+    }
+  }
+
+  .hero__name {
+    font-family: var(--font-serif);
+    font-size: clamp(2.9rem, 9.5vw, 5rem);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .hero__role {
+    margin: 1.1rem 0 0;
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .hero__tagline {
+    margin: 1.5rem 0 0;
+    font-size: 1.3rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 46ch;
+    text-wrap: pretty;
+  }
+
+  .hero__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.15rem;
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+  }
+
+  .hero__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .hero__links a:hover {
+    color: var(--ink);
+  }
+
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.62rem 1.05rem;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #16232a;
+    background: var(--marker);
+    border: 2px solid #16232a;
+    border-radius: var(--radius);
+    transition:
+      translate 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .button:hover {
+    translate: -2px -2px;
+    box-shadow: 4px 4px 0 var(--peach);
+  }
+
+  .button[data-variant='ghost'] {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .button[data-variant='ghost']:hover {
+    box-shadow: 4px 4px 0 var(--marker);
+  }
+
+  /* Offset riso blocks behind the portrait. */
+  .portrait {
+    position: relative;
+    width: min(13rem, 45vw);
+    aspect-ratio: 1;
+  }
+
+  .portrait::before,
+  .portrait::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    z-index: -1;
+  }
+
+  .portrait::before {
+    background: var(--mint);
+    translate: -0.7rem -0.7rem;
+  }
+
+  .portrait::after {
+    background: var(--peach);
+    translate: 0.7rem 0.7rem;
+  }
+
+  .portrait img {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius);
+    border: 2px solid var(--ink);
+  }
+
+  @media (width < 48rem) {
+    .portrait {
+      display: none;
+    }
+  }
+
+  /* --- About ------------------------------------------------------------- */
+
+  .about {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  @media (width >= 52rem) {
+    .about {
+      grid-template-columns: minmax(0, 1fr) 15rem;
+      gap: 4rem;
+    }
+  }
+
+  .about__label {
+    margin: 0 0 1rem;
+  }
+
+  .about__text {
+    max-width: 60ch;
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+
+  .about__text p:not(.label) {
+    margin: 0 0 1.1rem;
+    text-wrap: pretty;
+  }
+
+  .about__text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .about__side-label {
+    margin-top: 2rem;
+  }
+
+  .interests,
+  .education {
+    list-style: none;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .interests li {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding-left: 0.9rem;
+    position: relative;
+    color: var(--ink);
+  }
+
+  .interests li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.45em;
+    width: 0.42em;
+    height: 0.42em;
+    background: var(--ink);
+    rotate: 45deg;
+  }
+
+  .education li {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .education__what {
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.3;
+  }
+
+  .education__where {
+    color: var(--ink-faint);
+  }
+
+  /* --- Publications ------------------------------------------------------ */
+
+  .pubs {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  /* --- News -------------------------------------------------------------- */
+
+  .notes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .note {
+    display: grid;
+    gap: 0.15rem 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+
+  .note:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  @media (width >= 34rem) {
+    .note {
+      grid-template-columns: 6rem minmax(0, 1fr);
+      align-items: baseline;
+    }
+  }
+
+  .note__date {
+    white-space: nowrap;
+  }
+
+  .note__text {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  /* --- Teaching ---------------------------------------------------------- */
+
+  .teaching {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .course {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.35rem 1.5rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .course:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .course__title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 1.08rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .course__where {
+    margin: 0.2rem 0 0;
+  }
+
+  .course__role {
+    color: var(--ink-faint);
+  }
+
+  .course__when {
+    margin: 0;
+    white-space: nowrap;
+    color: var(--ink-faint);
+  }
+
+  /* --- Writing ----------------------------------------------------------- */
+
+  .writing {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2rem;
+  }
+
+  .entry {
+    display: grid;
+    gap: 0.3rem 2rem;
+  }
+
+  @media (width >= 40rem) {
+    .entry {
+      grid-template-columns: 6rem minmax(0, 1fr);
+    }
+  }
+
+  .entry__date {
+    white-space: nowrap;
+    padding-top: 0.35rem;
+  }
+
+  .entry__title {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0 0 0.35rem;
+    text-wrap: balance;
+  }
+
+  .entry__desc {
+    margin: 0;
+    color: var(--ink-soft);
+    max-width: 60ch;
+    text-wrap: pretty;
+  }
+
+  /* --- Contact ----------------------------------------------------------- */
+
+  .contact {
+    max-width: 48ch;
+  }
+
+  .contact__title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 4vw, 2.2rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 1rem -0.42em;
+  }
+
+  .contact__text {
+    margin: 0 0 1.75rem;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+    text-wrap: pretty;
+  }
+</style>

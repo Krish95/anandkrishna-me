@@ -1,0 +1,54 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+
+/**
+ * Static full-text search via Pagefind.
+ *
+ * Pagefind indexes the built HTML *after* `astro build`, so `/pagefind/*` only
+ * exists in a production build — this page will look empty under `astro dev`.
+ * Run `npm run build && npm run preview` to try it locally.
+ */
+---
+
+<PageLayout
+  title="Search"
+  noindex
+  lede="Full-text search across posts, projects, and the CV."
+  description="Search the site."
+>
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+
+  <div id="search"></div>
+
+  <noscript>
+    <p class="noscript">
+      Search needs JavaScript. The <a href="/blog">writing index</a> lists every post if you'd
+      rather browse.
+    </p>
+  </noscript>
+
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof PagefindUI === 'undefined') return;
+      new PagefindUI({
+        element: '#search',
+        showSubResults: true,
+        showImages: false,
+        excerptLength: 24,
+        resetStyles: false,
+        autofocus: true,
+      });
+    });
+  </script>
+</PageLayout>
+
+<style>
+  .noscript {
+    color: var(--ink-soft);
+  }
+
+  #search {
+    max-width: 44rem;
+  }
+</style>

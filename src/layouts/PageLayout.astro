@@ -1,0 +1,62 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  /** Meta description. Falls back to `lede`, then the site default. */
+  description?: string;
+  /** Short intro under the page title. */
+  lede?: string;
+  noindex?: boolean;
+  /** Displayed above the title as a small uppercase kicker. */
+  kicker?: string;
+}
+
+const { title, description, lede, noindex, kicker } = Astro.props;
+---
+
+<Base title={title} description={description ?? lede} noindex={noindex}>
+  <div class="shell page">
+    <header class="page__header">
+      {kicker && <p class="label page__kicker">{kicker}</p>}
+      <h1 class="page__title">{title}</h1>
+      {lede && <p class="page__lede">{lede}</p>}
+    </header>
+
+    <slot />
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding-block: 3rem 1rem;
+  }
+
+  .page__header {
+    max-width: 46rem;
+    margin-bottom: 3rem;
+  }
+
+  .page__kicker {
+    margin: 0 0 0.7rem;
+  }
+
+  .page__title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.9rem, 5vw, 2.6rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .page__lede {
+    margin: 0.9rem 0 0;
+    font-size: 1.15rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    text-wrap: pretty;
+  }
+</style>

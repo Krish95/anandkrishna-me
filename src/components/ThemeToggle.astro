@@ -1,0 +1,119 @@
+---
+import Icon from './Icon.astro';
+
+/**
+ * Three-state theme control: system -> light -> dark -> system.
+ *
+ * "System" is a real state, not an absence of one — clearing the override is
+ * how you hand the decision back to the OS.
+ */
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  data-theme-toggle
+  data-state="system"
+  aria-label="Colour theme: following system. Activate to switch to light."
+>
+  <span class="theme-toggle__icon" data-for="system"><Icon name="monitor" size={16} /></span>
+  <span class="theme-toggle__icon" data-for="light"><Icon name="sun" size={16} /></span>
+  <span class="theme-toggle__icon" data-for="dark"><Icon name="moon" size={16} /></span>
+</button>
+
+<style>
+  .theme-toggle {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition:
+      color 150ms ease,
+      border-color 150ms ease,
+      background-color 150ms ease;
+  }
+
+  .theme-toggle:hover {
+    color: var(--ink);
+    border-color: var(--rule-strong);
+  }
+
+  /* All three icons occupy the same cell; only the active one is shown. */
+  .theme-toggle__icon {
+    grid-area: 1 / 1;
+    display: none;
+  }
+
+  .theme-toggle[data-state='system'] .theme-toggle__icon[data-for='system'],
+  .theme-toggle[data-state='light'] .theme-toggle__icon[data-for='light'],
+  .theme-toggle[data-state='dark'] .theme-toggle__icon[data-for='dark'] {
+    display: block;
+  }
+</style>
+
+<script>
+  type ThemeState = 'system' | 'light' | 'dark';
+
+  const ORDER: ThemeState[] = ['system', 'light', 'dark'];
+
+  const read = (): ThemeState => {
+    try {
+      const stored = localStorage.getItem('theme');
+      return stored === 'light' || stored === 'dark' ? stored : 'system';
+    } catch {
+      return 'system';
+    }
+  };
+
+  const apply = (state: ThemeState) => {
+    if (state === 'system') {
+      delete document.documentElement.dataset.theme;
+      try {
+        localStorage.removeItem('theme');
+      } catch {
+        /* ignore */
+      }
+    } else {
+      document.documentElement.dataset.theme = state;
+      try {
+        localStorage.setItem('theme', state);
+      } catch {
+        /* ignore */
+      }
+    }
+  };
+
+  const label = (state: ThemeState) => {
+    const next = ORDER[(ORDER.indexOf(state) + 1) % ORDER.length]!;
+    const current = state === 'system' ? 'following system' : state;
+    return `Colour theme: ${current}. Activate to switch to ${next === 'system' ? 'system' : next}.`;
+  };
+
+  const sync = (button: HTMLButtonElement, state: ThemeState) => {
+    button.dataset.state = state;
+    button.setAttribute('aria-label', label(state));
+  };
+
+  const init = () => {
+    const buttons = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
+    if (buttons.length === 0) return;
+
+    let state = read();
+    buttons.forEach((button) => sync(button, state));
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        state = ORDER[(ORDER.indexOf(state) + 1) % ORDER.length]!;
+        apply(state);
+        buttons.forEach((b) => sync(b, state));
+      });
+    });
+  };
+
+  init();
+</script>

@@ -1,0 +1,25 @@
+# Cloudflare Pages reads this file from the deployed output root.
+# Docs: https://developers.cloudflare.com/pages/configuration/headers/
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+# Astro fingerprints everything under /_astro/, so it can be cached forever.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Build-time social cards are content-addressed by slug, not by hash — cache
+# them hard but allow a purge on redeploy.
+/og/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# The search index changes on every build.
+/pagefind/*
+  Cache-Control: public, max-age=3600, must-revalidate

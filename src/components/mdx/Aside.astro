@@ -1,0 +1,50 @@
+---
+/**
+ * Margin note. Sits in the right gutter on wide screens and folds inline on
+ * narrow ones, so it never competes with the main column on mobile.
+ *
+ * ```mdx
+ * <Aside>Tangent that would derail the paragraph.</Aside>
+ * ```
+ */
+---
+
+<aside class="sidenote">
+  <slot />
+</aside>
+
+<style>
+  .sidenote {
+    margin-block: 1.5em;
+    padding-left: 0.85rem;
+    border-left: 2px solid var(--peach);
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  .sidenote > :global(:first-child) {
+    margin-top: 0;
+  }
+
+  .sidenote > :global(:last-child) {
+    margin-bottom: 0;
+  }
+
+  /* Float into the gutter once the viewport can spare the room. The parent
+     `.post__body` reserves this space via its grid, so nothing overlaps. */
+  @media (width >= 72rem) {
+    .sidenote {
+      float: right;
+      clear: right;
+      width: 13rem;
+      margin-right: -15.5rem;
+      margin-top: 0.35em;
+      border-left: 0;
+      padding-left: 0;
+      border-top: 2px solid var(--peach);
+      padding-top: 0.5rem;
+    }
+  }
+</style>

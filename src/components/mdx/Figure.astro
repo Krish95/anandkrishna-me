@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+/**
+ * Captioned image for MDX posts. Import the asset so Astro can optimise it:
+ *
+ * ```mdx
+ * import diagram from './diagram.png';
+ * <Figure src={diagram} alt="How the pipeline fans out" caption="Fan-out, then merge." />
+ * ```
+ */
+interface Props {
+  src: ImageMetadata;
+  /** Required. Pass `alt=""` only for decoration that adds nothing. */
+  alt: string;
+  caption?: string;
+  /** `wide` breaks out past the text measure on large screens. */
+  width?: 'measure' | 'wide';
+}
+
+const { src, alt, caption, width = 'measure' } = Astro.props;
+---
+
+<figure class="figure" data-width={width}>
+  <Image src={src} alt={alt} loading="lazy" densities={[1, 2]} />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .figure {
+    margin-block: 2em;
+  }
+
+  .figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+  }
+
+  /* Bleed slightly wider than the prose measure where there's room. */
+  @media (width >= 60rem) {
+    .figure[data-width='wide'] {
+      width: min(52rem, calc(100vw - 4rem));
+      margin-inline: calc((var(--measure) - min(52rem, calc(100vw - 4rem))) / 2);
+    }
+  }
+</style>

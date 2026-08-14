@@ -1,0 +1,129 @@
+---
+/**
+ * Aside box for MDX posts.
+ *
+ * ```mdx
+ * <Callout type="warning" title="Careful">
+ *   Body text, **markdown works** in here.
+ * </Callout>
+ * ```
+ */
+type CalloutType = 'note' | 'tip' | 'warning' | 'danger';
+
+interface Props {
+  type?: CalloutType;
+  /** Overrides the default heading ("Note", "Tip", …). Pass `false` to hide it. */
+  title?: string | false;
+}
+
+const { type = 'note', title } = Astro.props;
+
+const DEFAULTS: Record<CalloutType, { label: string; glyph: string }> = {
+  note: { label: 'Note', glyph: 'i' },
+  tip: { label: 'Tip', glyph: '✦' },
+  warning: { label: 'Warning', glyph: '!' },
+  danger: { label: 'Heads up', glyph: '×' },
+};
+
+const { label, glyph } = DEFAULTS[type];
+const heading = title === false ? null : (title ?? label);
+---
+
+<aside class="callout" data-type={type}>
+  {
+    heading && (
+      <p class="callout__title">
+        <span class="callout__glyph" aria-hidden="true">
+          {glyph}
+        </span>
+        {heading}
+      </p>
+    )
+  }
+  <div class="callout__body">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .callout {
+    margin-block: 1.75em;
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--rule);
+    border-left-width: 3px;
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    font-size: 0.975rem;
+  }
+
+  .callout[data-type='note'] {
+    border-left-color: var(--sky);
+    background: var(--band-sky);
+  }
+
+  .callout[data-type='tip'] {
+    border-left-color: var(--mint);
+    background: var(--band-mint);
+  }
+
+  .callout[data-type='warning'] {
+    border-left-color: var(--marker);
+    background: var(--band-butter);
+  }
+
+  .callout[data-type='danger'] {
+    border-left-color: var(--peach);
+    background: var(--band-blush);
+  }
+
+  .callout__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .callout__glyph {
+    display: grid;
+    place-items: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 50%;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    line-height: 1;
+    color: #16232a;
+    flex: none;
+  }
+
+  .callout[data-type='note'] .callout__glyph {
+    background: var(--sky);
+  }
+
+  .callout[data-type='tip'] .callout__glyph {
+    background: var(--mint);
+  }
+
+  .callout[data-type='warning'] .callout__glyph {
+    background: var(--marker);
+  }
+
+  .callout[data-type='danger'] .callout__glyph {
+    background: var(--peach);
+  }
+
+  /* Tighten the first/last children so the box doesn't gain double padding. */
+  .callout__body > :global(:first-child) {
+    margin-top: 0;
+  }
+
+  .callout__body > :global(:last-child) {
+    margin-bottom: 0;
+  }
+</style>

@@ -1,0 +1,30 @@
+# Short dated updates for the homepage "News" band.
+# Transcribed from the events list on the previous site. `id` must be unique;
+# `href` is optional. Newest first is handled automatically.
+- id: aaai-2025-pmean
+  date: 2024-12-10
+  text: '“$p$-Mean Regret for Stochastic Bandits” accepted at AAAI 2025.'
+
+- id: itcs-2024-xos
+  date: 2023-11-01
+  text: '“Sublinear Approximation Algorithm for Nash Social Welfare with XOS Valuations” accepted at ITCS 2024.'
+
+- id: best-presentation-eecs
+  date: 2023-04-01
+  text: Received the Best Presentation Award at the EECS 2023 Research Students Symposium, IISc.
+
+- id: best-poster-pmrf
+  date: 2023-02-15
+  text: Received the Best Poster Award at the Annual PMRF Symposium.
+
+- id: commendable-research-pmrf
+  date: 2023-02-01
+  text: Selected for Commendable Research by PMRFs in Computer Science & Engineering, Data Science, and Mathematics.
+
+- id: nus-visit
+  date: 2023-01-15
+  text: Visiting Prof. Warut Suksompong at the National University of Singapore.
+
+- id: dsu-probability
+  date: 2021-01-15
+  text: Taught a full-semester course on Probability at Dayananda Sagar University to over 60 students.

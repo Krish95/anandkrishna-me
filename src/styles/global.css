@@ -1,0 +1,877 @@
+@import 'tailwindcss';
+
+/* Self-hosted variable fonts — no external requests, no layout shift.
+   Newsreader = reading + display. Jost = geometric micro-labels.
+   JetBrains Mono = code and metadata. */
+@import '@fontsource-variable/newsreader';
+@import '@fontsource-variable/newsreader/wght-italic.css';
+@import '@fontsource-variable/jost';
+@import '@fontsource-variable/jetbrains-mono';
+
+/* KaTeX. Self-hosted through the bundler, so its fonts are fingerprinted and
+   served from our own origin rather than a CDN. */
+@import 'katex/dist/katex.min.css';
+
+/* ---------------------------------------------------------------------------
+   Theme: three states.
+   - No attribute  -> follow the OS (`prefers-color-scheme`).
+   - [data-theme=light] / [data-theme=dark] -> explicit user override, wins both ways.
+   Every colour is defined on bare `:root` first so nothing depends on a media
+   query for its only definition.
+--------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light;
+
+  /* Surfaces — warm paper stock rather than pure white. */
+  --paper: #fbf8f1;
+  --paper-raised: #fffdf8;
+  --paper-sunken: #f3eee2;
+
+  /* Text */
+  --ink: #16232a;
+  --ink-soft: #4b5b62;
+  --ink-faint: #7d8b91;
+
+  /* Lines */
+  --rule: #e4ddcf;
+  --rule-strong: #cdc3b0;
+
+  /* Riso ink accents — pushed saturated so the colour blocking reads as a
+     deliberate print effect rather than a tint. */
+  --marker: #f7d64f;
+  --marker-wash: color-mix(in srgb, var(--marker) 72%, transparent);
+  --peach: #f2a677;
+  --mint: #86d3b4;
+  --sky: #82c4f2;
+  --lilac: #b5a6e8;
+
+  /* Tinted section bands */
+  --band-mint: #d6f0e3;
+  --band-butter: #fdf2bd;
+  --band-blush: #fbe1d1;
+  --band-sky: #daecfb;
+
+  --link: #0b5c78;
+  --focus: #0b5c78;
+
+  --code-bg: #f6f1e5;
+  --code-inline-bg: #efe8d9;
+  --code-border: #e4ddcf;
+
+  /* Shape */
+  --radius: 3px;
+  --shell: 62rem;
+  --measure: 68ch;
+}
+
+/* Dark palette, applied when the OS asks for it and the user hasn't
+   explicitly chosen light. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --paper: #0f1417;
+    --paper-raised: #151d21;
+    --paper-sunken: #0a0f11;
+
+    --ink: #e9e5dc;
+    --ink-soft: #a6b2b7;
+    --ink-faint: #78868c;
+
+    --rule: #242f34;
+    --rule-strong: #384750;
+
+    --marker: #f7d64f;
+    --marker-wash: color-mix(in srgb, var(--marker) 34%, transparent);
+    --peach: #e29a69;
+    --mint: #6fc7a8;
+    --sky: #6fb6e2;
+    --lilac: #a394d8;
+
+    --band-mint: #0e2620;
+    --band-butter: #24200e;
+    --band-blush: #2a1a12;
+    --band-sky: #0f2130;
+
+    --link: #8ed2ea;
+    --focus: #8ed2ea;
+
+    --code-bg: #121a1e;
+    --code-inline-bg: #1a2429;
+    --code-border: #242f34;
+  }
+}
+
+/* Explicit dark override — repeats the same values so the toggle wins
+   regardless of the OS preference. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --paper: #0f1417;
+  --paper-raised: #151d21;
+  --paper-sunken: #0a0f11;
+
+  --ink: #e9e5dc;
+  --ink-soft: #a6b2b7;
+  --ink-faint: #78868c;
+
+  --rule: #242f34;
+  --rule-strong: #384750;
+
+  --marker: #f7d64f;
+  --marker-wash: color-mix(in srgb, var(--marker) 34%, transparent);
+  --peach: #e29a69;
+  --mint: #6fc7a8;
+  --sky: #6fb6e2;
+  --lilac: #a394d8;
+
+  --band-mint: #0e2620;
+  --band-butter: #24200e;
+  --band-blush: #2a1a12;
+  --band-sky: #0f2130;
+
+  --link: #8ed2ea;
+  --focus: #8ed2ea;
+
+  --code-bg: #121a1e;
+  --code-inline-bg: #1a2429;
+  --code-border: #242f34;
+}
+
+/* Make Tailwind's `dark:` variant follow the same three-state logic. */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme='light']), :root:not([data-theme='light']) *) {
+      @slot;
+    }
+  }
+  &:where(:root[data-theme='dark'], :root[data-theme='dark'] *) {
+    @slot;
+  }
+}
+
+/* Expose the tokens as Tailwind utilities. `inline` so utilities emit
+   `var(--paper)` directly and keep responding to theme changes. */
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-paper-sunken: var(--paper-sunken);
+
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+
+  --color-marker: var(--marker);
+  --color-peach: var(--peach);
+  --color-mint: var(--mint);
+  --color-sky: var(--sky);
+  --color-lilac: var(--lilac);
+
+  --color-band-mint: var(--band-mint);
+  --color-band-butter: var(--band-butter);
+  --color-band-blush: var(--band-blush);
+  --color-band-sky: var(--band-sky);
+
+  --color-link: var(--link);
+
+  --font-serif: 'Newsreader Variable', Newsreader, Palatino, Georgia, 'Times New Roman', serif;
+  --font-sans: 'Jost Variable', Jost, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-card: var(--radius);
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+
+@layer base {
+  html {
+    /* Anchor links land below the sticky header. */
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--marker);
+    color: #16232a;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Only strip the default outline where we've provided our own. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  img,
+  svg,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Respect reduced motion globally. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Reusable pieces
+--------------------------------------------------------------------------- */
+
+@utility shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Geometric uppercase micro-label. The workhorse of the layout. */
+@utility label {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  line-height: 1.4;
+}
+
+/* Monospace metadata: dates, tags, counts. */
+@utility meta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--ink-soft);
+}
+
+/*
+ * Highlighter-pen link. The wash sits behind the text and fills in on hover,
+ * echoing a marker stroke. Uses background-size so it animates cheaply.
+ */
+@utility marker-link {
+  color: inherit;
+  text-decoration: none;
+  background-image: linear-gradient(var(--marker-wash), var(--marker-wash));
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  background-size: 100% 0.42em;
+  transition:
+    background-size 180ms ease,
+    background-color 180ms ease;
+
+  &:hover,
+  &:focus-visible {
+    background-size: 100% 100%;
+    background-image: linear-gradient(var(--marker), var(--marker));
+    color: #16232a;
+  }
+}
+
+/* Section heading with a peach slab struck through it. Deliberately heavy —
+   this is the loudest recurring mark on the site. */
+@utility struck {
+  position: relative;
+  display: inline-block;
+  padding-inline: 0.42em;
+  z-index: 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 52%;
+    height: 0.5em;
+    background: var(--peach);
+    z-index: -1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Prose — hand-rolled so the editorial rhythm is exactly ours.
+--------------------------------------------------------------------------- */
+
+.prose {
+  max-width: var(--measure);
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.prose > * + * {
+  margin-top: 1.25em;
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  scroll-margin-top: 6rem;
+}
+
+.prose h2 {
+  margin-top: 2.4em;
+  font-size: 1.6em;
+}
+
+.prose h3 {
+  margin-top: 2em;
+  font-size: 1.25em;
+}
+
+.prose h4 {
+  margin-top: 1.8em;
+  font-size: 1.05em;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* Anchor affordance on hover, without pushing layout around. */
+.prose :is(h2, h3, h4) > a.heading-anchor {
+  color: var(--ink-faint);
+  text-decoration: none;
+  margin-left: 0.35em;
+  opacity: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7em;
+  transition: opacity 150ms ease;
+}
+
+.prose :is(h2, h3, h4):hover > a.heading-anchor,
+.prose a.heading-anchor:focus-visible {
+  opacity: 1;
+}
+
+.prose p {
+  text-wrap: pretty;
+}
+
+.prose a {
+  color: inherit;
+  text-decoration: none;
+  background-image: linear-gradient(var(--marker-wash), var(--marker-wash));
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 100% 0.3em;
+  transition: background-size 180ms ease;
+}
+
+.prose a:hover,
+.prose a:focus-visible {
+  background-size: 100% 100%;
+  background-image: linear-gradient(var(--marker), var(--marker));
+  color: #16232a;
+}
+
+.prose strong {
+  font-weight: 650;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.6em;
+}
+
+.prose ul {
+  list-style: none;
+}
+
+.prose ul > li {
+  position: relative;
+}
+
+.prose ul > li::before {
+  content: '';
+  position: absolute;
+  left: -1.1em;
+  top: 0.62em;
+  width: 0.4em;
+  height: 0.4em;
+  background: var(--peach);
+  border-radius: 1px;
+  rotate: 45deg;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose ol > li::marker {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--ink-faint);
+}
+
+.prose li + li {
+  margin-top: 0.4em;
+}
+
+/* Nested lists shouldn't inherit the top-level gap. */
+.prose li > ul,
+.prose li > ol {
+  margin-top: 0.4em;
+}
+
+.prose blockquote {
+  margin-inline: 0;
+  padding-left: 1.2em;
+  border-left: 3px solid var(--marker);
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.prose blockquote p:first-child {
+  margin-top: 0;
+}
+
+.prose figure {
+  margin-inline: 0;
+}
+
+.prose figure img {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.prose figcaption {
+  margin-top: 0.6em;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  color: var(--ink-faint);
+}
+
+.prose hr {
+  margin-block: 3em;
+  border-top: 1px solid var(--rule);
+}
+
+/* Tables scroll inside their own container rather than widening the page. */
+.prose .table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+
+.prose th,
+.prose td {
+  padding: 0.55em 0.85em;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+
+.prose th {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--paper-sunken);
+  white-space: nowrap;
+}
+
+.prose tbody tr:last-child :is(td, th) {
+  border-bottom: 0;
+}
+
+/* Inline code */
+.prose :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  padding: 0.15em 0.35em;
+  background: var(--code-inline-bg);
+  border-radius: 2px;
+  word-break: break-word;
+}
+
+.prose kbd {
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--rule-strong);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--paper-raised);
+}
+
+.prose sup,
+.prose sub {
+  font-size: 0.72em;
+  line-height: 0;
+}
+
+.prose sup {
+  vertical-align: super;
+}
+
+.prose sub {
+  vertical-align: sub;
+}
+
+/* GFM footnotes (Sätteri emits the standard `.footnotes` section). */
+.prose .footnotes {
+  margin-top: 3.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid var(--rule);
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.prose .footnotes h2 {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 0;
+}
+
+.prose .footnotes ol {
+  padding-left: 1.3em;
+}
+
+.prose [data-footnote-ref],
+.prose a[id^='user-content-fnref'] {
+  font-family: var(--font-mono);
+  font-size: 0.75em;
+  background: none;
+  padding-inline: 0.15em;
+  color: var(--link);
+}
+
+/* GFM task lists */
+.prose li:has(> input[type='checkbox']) {
+  list-style: none;
+}
+
+.prose li > input[type='checkbox'] {
+  margin-right: 0.5em;
+  accent-color: var(--link);
+}
+
+.prose li:has(> input[type='checkbox'])::before {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Maths (KaTeX)
+--------------------------------------------------------------------------- */
+
+/* KaTeX sizes itself slightly larger than surrounding text; pull it back so
+   inline maths sits on the same baseline weight as the prose. */
+.prose .katex {
+  font-size: 1.04em;
+}
+
+/* Display equations are the one thing guaranteed to be wider than the measure.
+   Let them scroll in their own box rather than widening the page. */
+.prose .katex-display {
+  margin-block: 1.4em;
+  padding-block: 0.5em;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* The MathML copy is for assistive tech only — never show both. */
+.prose .katex .katex-mathml {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+   Code blocks — Shiki emits both themes as CSS variables
+   (`defaultColor: false`), so we switch with CSS alone.
+--------------------------------------------------------------------------- */
+
+.prose :is(pre.astro-code, pre.shiki) {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  padding: 1.1rem 0;
+  overflow-x: auto;
+  background-color: var(--code-bg) !important;
+  border: 1px solid var(--code-border);
+  border-radius: var(--radius);
+  tab-size: 2;
+}
+
+.prose :is(pre.astro-code, pre.shiki) code {
+  display: grid;
+  min-width: max-content;
+}
+
+.prose :is(pre.astro-code, pre.shiki) .line {
+  padding-inline: 1.1rem;
+}
+
+/* Light theme is the default set of variables. */
+.prose :is(pre.astro-code, pre.shiki),
+.prose :is(pre.astro-code, pre.shiki) span {
+  color: var(--shiki-light);
+  font-style: var(--shiki-light-font-style);
+  font-weight: var(--shiki-light-font-weight);
+  text-decoration: var(--shiki-light-text-decoration);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .prose :is(pre.astro-code, pre.shiki),
+  :root:not([data-theme='light']) .prose :is(pre.astro-code, pre.shiki) span {
+    color: var(--shiki-dark);
+    font-style: var(--shiki-dark-font-style);
+    font-weight: var(--shiki-dark-font-weight);
+    text-decoration: var(--shiki-dark-text-decoration);
+  }
+}
+
+:root[data-theme='dark'] .prose :is(pre.astro-code, pre.shiki),
+:root[data-theme='dark'] .prose :is(pre.astro-code, pre.shiki) span {
+  color: var(--shiki-dark);
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+  text-decoration: var(--shiki-dark-text-decoration);
+}
+
+/* Filename header from ```ts title="…" (see src/lib/shiki-code-title.ts). */
+.prose .code-figure {
+  margin-block: 1.75em;
+}
+
+.prose .code-figure__title {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  background: var(--paper-sunken);
+  border: 1px solid var(--code-border);
+  border-bottom: 0;
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 0.4em 0.7em;
+  margin: 0;
+}
+
+/* Square off the top-left corner so the tab and block read as one object. */
+.prose .code-figure > :is(pre.astro-code, pre.shiki) {
+  margin-top: 0;
+  border-top-left-radius: 0;
+}
+
+/* ```ts showLineNumbers — numbered gutter via counters, so the numbers are
+   never selected when you copy the code. */
+.prose :is(pre.astro-code, pre.shiki).line-numbers code {
+  counter-reset: line;
+}
+
+.prose :is(pre.astro-code, pre.shiki).line-numbers .line {
+  counter-increment: line;
+}
+
+.prose :is(pre.astro-code, pre.shiki).line-numbers .line::before {
+  content: counter(line);
+  display: inline-block;
+  width: 1.6rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: var(--ink-faint);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Copy button, injected by the post layout script. */
+.prose .code-wrap {
+  position: relative;
+}
+
+.prose .code-copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 0.35em 0.55em;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 150ms ease,
+    color 150ms ease;
+}
+
+.prose .code-wrap:hover .code-copy,
+.prose .code-copy:focus-visible {
+  opacity: 1;
+}
+
+.prose .code-copy:hover {
+  color: var(--ink);
+  border-color: var(--rule-strong);
+}
+
+.prose .code-copy[data-copied] {
+  background: var(--marker);
+  border-color: var(--marker);
+  color: #16232a;
+  opacity: 1;
+}
+
+/* --- Shiki transformer affordances --------------------------------------- */
+
+/* `// [!code highlight]` and ```ts {2-4} */
+.prose .line.highlighted {
+  background: color-mix(in srgb, var(--marker) 18%, transparent);
+  box-shadow: inset 3px 0 0 var(--marker);
+}
+
+/* `// [!code ++]` / `// [!code --]` */
+.prose .line.diff.add {
+  background: color-mix(in srgb, var(--mint) 22%, transparent);
+  box-shadow: inset 3px 0 0 var(--mint);
+}
+
+.prose .line.diff.remove {
+  background: color-mix(in srgb, var(--peach) 26%, transparent);
+  box-shadow: inset 3px 0 0 var(--peach);
+  opacity: 0.75;
+}
+
+.prose .line.diff::after {
+  position: absolute;
+  left: 0.35rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+}
+
+.prose .has-diff .line.diff.add::after {
+  content: '+';
+}
+
+.prose .has-diff .line.diff.remove::after {
+  content: '−';
+}
+
+.prose :is(pre.astro-code, pre.shiki):has(.diff) .line {
+  position: relative;
+}
+
+/* `// [!code focus]` — dim everything that isn't focused. */
+.prose :is(pre.astro-code, pre.shiki):has(.focused) .line:not(.focused) {
+  filter: blur(0.9px);
+  opacity: 0.5;
+  transition:
+    filter 220ms ease,
+    opacity 220ms ease;
+}
+
+.prose :is(pre.astro-code, pre.shiki):has(.focused):hover .line:not(.focused) {
+  filter: none;
+  opacity: 1;
+}
+
+/* `// [!code error]` / `// [!code warning]` */
+.prose .line.highlighted.error {
+  background: color-mix(in srgb, #e5484d 16%, transparent);
+  box-shadow: inset 3px 0 0 #e5484d;
+}
+
+.prose .line.highlighted.warning {
+  background: color-mix(in srgb, var(--marker) 22%, transparent);
+  box-shadow: inset 3px 0 0 var(--marker);
+}
+
+/* ---------------------------------------------------------------------------
+   Pagefind search UI — restyled to match the palette.
+--------------------------------------------------------------------------- */
+
+#search {
+  --pagefind-ui-scale: 0.8;
+  --pagefind-ui-primary: var(--ink);
+  --pagefind-ui-text: var(--ink);
+  --pagefind-ui-background: var(--paper-raised);
+  --pagefind-ui-border: var(--rule);
+  --pagefind-ui-tag: var(--paper-sunken);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: var(--radius);
+  --pagefind-ui-font: var(--font-sans);
+}
+
+#search .pagefind-ui__result-title {
+  font-family: var(--font-serif);
+}
+
+#search mark {
+  background: var(--marker-wash);
+  color: inherit;
+}

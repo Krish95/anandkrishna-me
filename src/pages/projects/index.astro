@@ -1,0 +1,63 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import { getProjects } from '@/lib/content';
+
+const projects = await getProjects();
+---
+
+<PageLayout
+  title="Projects"
+  kicker={`${projects.length} ${projects.length === 1 ? 'thing' : 'things'}`}
+  lede="Products, tools, and experiments — the ones worth writing down."
+>
+  {
+    projects.length === 0 ? (
+      <p class="empty">
+        No projects yet. Add an <code>.mdx</code> file under <code>src/content/projects/</code>.
+      </p>
+    ) : (
+      <ul class="grid">
+        {projects.map((project) => (
+          <li>
+            <ProjectCard project={project} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</PageLayout>
+
+<style>
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  @media (width >= 44rem) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width >= 68rem) {
+    .grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .empty {
+    color: var(--ink-soft);
+  }
+
+  .empty code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--paper-sunken);
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+  }
+</style>

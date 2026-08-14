@@ -1,0 +1,108 @@
+---
+/**
+ * Full-bleed tinted section with a contained inner column.
+ *
+ * The homepage is built from stacked bands in different paper tints — the
+ * device that gives the page its riso-print rhythm without needing images.
+ */
+interface Props {
+  tone?: 'paper' | 'mint' | 'butter' | 'blush' | 'sky' | 'sunken';
+  /** Renders the band's heading and an optional "see all" link. */
+  title?: string;
+  link?: { label: string; href: string };
+  /** HTML id, for anchor links from the nav. */
+  id?: string;
+  class?: string;
+}
+
+const { tone = 'paper', title, link, id, class: className } = Astro.props;
+---
+
+<section class:list={['band', className]} data-tone={tone} id={id}>
+  <div class="shell">
+    {
+      title && (
+        <div class="band__head">
+          <h2 class="band__title">
+            <span class="struck">{title}</span>
+          </h2>
+          {
+            link && (
+              <a class="band__link" href={link.href}>
+                {link.label}
+              </a>
+            )
+          }
+        </div>
+      )
+    }
+    <slot />
+  </div>
+</section>
+
+<style>
+  .band {
+    padding-block: 4.5rem;
+    border-top: 2px solid var(--ink);
+  }
+
+  .band[data-tone='paper'] {
+    background: var(--paper);
+  }
+
+  .band[data-tone='sunken'] {
+    background: var(--paper-sunken);
+  }
+
+  .band[data-tone='mint'] {
+    background: var(--band-mint);
+  }
+
+  .band[data-tone='butter'] {
+    background: var(--band-butter);
+  }
+
+  .band[data-tone='blush'] {
+    background: var(--band-blush);
+  }
+
+  .band[data-tone='sky'] {
+    background: var(--band-sky);
+  }
+
+  .band__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.25rem;
+  }
+
+  .band__title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    margin: 0;
+    /* The struck slab is drawn behind the text via ::after, so pull the block
+       left by the same padding to keep the text optically aligned. */
+    margin-left: -0.42em;
+  }
+
+  .band__link {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .band__link:hover {
+    color: var(--ink);
+    box-shadow: inset 0 -0.4em 0 var(--marker-wash);
+  }
+</style>

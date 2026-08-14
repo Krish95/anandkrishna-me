@@ -1,0 +1,377 @@
+---
+import { Image } from 'astro:assets';
+import type { MarkdownHeading } from '@astrojs/internal-helpers/markdown';
+
+import Base from './Base.astro';
+import Icon from '@/components/Icon.astro';
+import Tag from '@/components/Tag.astro';
+import Toc from '@/components/Toc.astro';
+import type { Post } from '@/lib/content';
+import { formatDate, isoDate, readingTime } from '@/lib/format';
+
+interface Props {
+  post: Post;
+  headings: MarkdownHeading[];
+  prev?: Post;
+  next?: Post;
+}
+
+const { post, headings, prev, next } = Astro.props;
+const { title, description, pubDate, updatedDate, tags, hero, heroAlt, series, toc } = post.data;
+const minutes = readingTime(post.body);
+---
+
+<Base
+  title={title}
+  description={description}
+  type="article"
+  ogImage={`/og/${post.id}.png`}
+  article={{ publishedTime: pubDate, modifiedTime: updatedDate, tags }}
+>
+  <article class="post" data-pagefind-body>
+    <header class="post__header">
+      <a href="/blog" class="post__back">
+        <Icon name="arrow-right" size={14} class="post__back-icon" />
+        All writing
+      </a>
+
+      {series && <p class="label post__series">{series}</p>}
+
+      <h1 class="post__title">{title}</h1>
+      <p class="post__lede">{description}</p>
+
+      <div class="meta post__meta">
+        <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{minutes} min read</span>
+        {
+          updatedDate && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>
+                Updated <time datetime={isoDate(updatedDate)}>{formatDate(updatedDate)}</time>
+              </span>
+            </>
+          )
+        }
+      </div>
+
+      {
+        tags.length > 0 && (
+          <ul class="post__tags" data-pagefind-ignore>
+            {tags.map((tag) => (
+              <li>
+                <Tag tag={tag} />
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    {
+      hero && (
+        <div class="post__hero">
+          <Image src={hero} alt={heroAlt ?? ''} width={1600} height={900} loading="eager" />
+        </div>
+      )
+    }
+
+    <div class="post__grid" data-has-toc={toc ? '' : undefined}>
+      {
+        toc && (
+          <div class="post__rail" data-pagefind-ignore>
+            <Toc headings={headings} />
+          </div>
+        )
+      }
+
+      <div class="prose post__body">
+        <slot />
+      </div>
+    </div>
+
+    {
+      (prev || next) && (
+        <nav class="post__nav" aria-label="More writing" data-pagefind-ignore>
+          {next ? (
+            <a href={`/blog/${next.id}`} class="post__nav-item" data-dir="next">
+              <span class="label">Newer</span>
+              <span class="post__nav-title">{next.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+          {prev && (
+            <a href={`/blog/${prev.id}`} class="post__nav-item" data-dir="prev">
+              <span class="label">Older</span>
+              <span class="post__nav-title">{prev.data.title}</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  .post {
+    /* Wider than the global shell: this page carries two gutters. */
+    --post-shell: 72rem;
+  }
+
+  .post__header,
+  .post__hero,
+  .post__nav {
+    width: 100%;
+    max-width: var(--post-shell);
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (width >= 40rem) {
+    .post__header,
+    .post__hero,
+    .post__nav {
+      padding-inline: 2rem;
+    }
+  }
+
+  .post__header {
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+    max-width: calc(var(--measure) + 4rem);
+  }
+
+  .post__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-decoration: none;
+    margin-bottom: 1.75rem;
+  }
+
+  .post__back:hover {
+    color: var(--ink);
+  }
+
+  /* Point the arrow back the way the link goes. */
+  .post__back :global(.post__back-icon) {
+    rotate: 180deg;
+  }
+
+  .post__series {
+    margin: 0 0 0.6rem;
+    color: var(--ink-soft);
+  }
+
+  .post__title {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 5.5vw, 3rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.022em;
+    margin: 0 0 0.75rem;
+    text-wrap: balance;
+  }
+
+  .post__lede {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 0 0 1.4rem;
+    max-width: 46ch;
+    text-wrap: pretty;
+  }
+
+  .post__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .post__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+  }
+
+  .post__hero {
+    margin-bottom: 3rem;
+    max-width: calc(var(--post-shell) - 8rem);
+  }
+
+  .post__hero img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+  }
+
+  /* --- Reading grid ------------------------------------------------------ */
+
+  .post__grid {
+    width: 100%;
+    max-width: var(--post-shell);
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3rem;
+  }
+
+  @media (width >= 40rem) {
+    .post__grid {
+      padding-inline: 2rem;
+    }
+  }
+
+  .post__body {
+    grid-column: 1;
+  }
+
+  .post__rail {
+    display: none;
+  }
+
+  /*
+   * From here the outline gets its own left rail. The third column is empty on
+   * purpose: it reserves the gutter that <Aside> floats into, so margin notes
+   * can never overlap the outline or run off-screen.
+   */
+  @media (width >= 66rem) {
+    .post__grid[data-has-toc] {
+      grid-template-columns: 11rem minmax(0, var(--measure)) 14rem;
+      justify-content: center;
+    }
+
+    .post__grid[data-has-toc] .post__rail {
+      display: block;
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .post__grid[data-has-toc] .post__body {
+      grid-column: 2;
+      grid-row: 1;
+    }
+  }
+
+  /* Without a TOC, just centre the measure. */
+  .post__grid:not([data-has-toc]) .post__body {
+    margin-inline: auto;
+  }
+
+  /* --- Prev / next ------------------------------------------------------- */
+
+  .post__nav {
+    margin-top: 5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    gap: 1.5rem;
+    max-width: calc(var(--measure) + 4rem);
+  }
+
+  @media (width >= 44rem) {
+    .post__nav {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .post__nav-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .post__nav-item[data-dir='prev'] {
+    text-align: right;
+  }
+
+  .post__nav-title {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+
+  .post__nav-item:hover .post__nav-title {
+    box-shadow: inset 0 -0.35em 0 var(--marker-wash);
+  }
+</style>
+
+<script>
+  /**
+   * Two progressive enhancements for rendered markdown.
+   *
+   * Heading anchors come from rehype-autolink-headings at build time; these two
+   * are the ones that are simpler to do in the DOM, and neither is load-bearing
+   * if JavaScript fails.
+   */
+  const prose = document.querySelector('.prose');
+
+  if (prose) {
+    // 1. Let wide tables scroll inside their own box instead of widening the page.
+    prose.querySelectorAll('table').forEach((table) => {
+      if (table.parentElement?.classList.contains('table-scroll')) return;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-scroll';
+      wrapper.setAttribute('tabindex', '0');
+      wrapper.setAttribute('role', 'region');
+      wrapper.setAttribute('aria-label', 'Table, scrollable');
+      table.replaceWith(wrapper);
+      wrapper.append(table);
+    });
+
+    // 2. Copy-to-clipboard on every code block.
+    prose.querySelectorAll<HTMLPreElement>('pre.astro-code, pre.shiki').forEach((pre) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-wrap';
+      pre.replaceWith(wrapper);
+      wrapper.append(pre);
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'code-copy';
+      button.textContent = 'Copy';
+      button.setAttribute('aria-label', 'Copy code to clipboard');
+
+      let reset: ReturnType<typeof setTimeout> | undefined;
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(pre.innerText);
+          button.textContent = 'Copied';
+          button.dataset.copied = '';
+        } catch {
+          button.textContent = 'Failed';
+        }
+        clearTimeout(reset);
+        reset = setTimeout(() => {
+          button.textContent = 'Copy';
+          delete button.dataset.copied;
+        }, 2000);
+      });
+
+      wrapper.append(button);
+    });
+  }
+</script>

@@ -1,0 +1,58 @@
+---
+import { tagSlug } from '@/lib/content';
+
+interface Props {
+  tag: string;
+  /** Render as plain text instead of a link (e.g. inside a card that's already a link). */
+  static?: boolean;
+  count?: number;
+}
+
+const { tag, static: isStatic = false, count } = Astro.props;
+const Element = isStatic ? 'span' : 'a';
+---
+
+<Element
+  class="tag"
+  href={isStatic ? undefined : `/tags/${tagSlug(tag)}`}
+  data-static={isStatic ? '' : undefined}
+>
+  {tag}{count !== undefined && <span class="tag__count">{count}</span>}
+</Element>
+
+<style>
+  .tag {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35em;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    line-height: 1;
+    padding: 0.32em 0.5em;
+    color: var(--ink-soft);
+    background: var(--paper-sunken);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      border-color 150ms ease;
+  }
+
+  .tag:not([data-static]):hover {
+    background: var(--marker);
+    border-color: var(--marker);
+    color: #16232a;
+  }
+
+  .tag__count {
+    color: var(--ink-faint);
+    font-size: 0.9em;
+  }
+
+  .tag:not([data-static]):hover .tag__count {
+    color: #16232a;
+  }
+</style>
