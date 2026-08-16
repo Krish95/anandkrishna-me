@@ -74,7 +74,7 @@ const chips = [
   }
 
   .pub:hover {
-    border-left-color: var(--marker);
+    border-left-color: var(--rule-strong);
   }
 
   .pub__head {
@@ -103,28 +103,35 @@ const chips = [
     padding: 0.28em 0.5em;
     border-radius: 2px;
     white-space: nowrap;
-    color: #16232a;
     flex: none;
+    /* The fills are tonal steps of the same palette, so without an outline a
+       badge dissolves into whichever band it happens to sit on. */
+    border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
   }
 
   .pub__type[data-type='conference'] {
-    background: var(--mint);
+    background: var(--fill-mint);
+    color: var(--on-mint);
   }
 
   .pub__type[data-type='journal'] {
-    background: var(--sky);
+    background: var(--fill-sky);
+    color: var(--on-sky);
   }
 
   .pub__type[data-type='preprint'] {
-    background: var(--marker);
+    background: var(--fill-marker);
+    color: var(--on-marker);
   }
 
   .pub__type[data-type='workshop'] {
-    background: var(--lilac);
+    background: var(--fill-lilac);
+    color: var(--on-lilac);
   }
 
   .pub__type[data-type='thesis'] {
-    background: var(--peach);
+    background: var(--fill-peach);
+    color: var(--on-peach);
   }
 
   .pub__venue {
@@ -171,8 +178,8 @@ const chips = [
   }
 
   .pub__action:hover {
-    background: var(--marker);
-    border-color: var(--marker);
-    color: #16232a;
+    background: var(--fill-marker);
+    border-color: var(--on-marker);
+    color: var(--on-marker);
   }
 </style>

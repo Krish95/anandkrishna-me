@@ -1,11 +1,13 @@
 ---
 title: Achieving Envy-Freeness with Limited Subsidies under Dichotomous Valuations
-authors: ['Siddharth Barman', 'Anand Krishna', 'Yadati Narahari', 'Soumyarup Sadhukan']
-date: 2022-01-01
+authors: ['Siddharth Barman', 'Anand Krishna', 'Y. Narahari', 'Soumyarup Sadhukhan']
+date: 2022-01-19
 venue: IJCAI 2022
 type: conference
 summary: Under dichotomous valuations, envy-freeness is reachable with a per-agent subsidy of only $0$ or $1$ — a linear-factor improvement on general monotone valuations.
-links: {}
+links:
+  pdf: https://www.ijcai.org/proceedings/2022/0009.pdf
+  arxiv: https://arxiv.org/abs/2201.07419
 ---
 
 We study the problem of allocating indivisible goods among agents in a fair manner. While envy-free allocations of indivisible goods are not guaranteed to exist, envy-freeness can be achieved by additionally providing some subsidy to the agents. These subsidies can be alternatively viewed as a divisible good (money) that is fractionally assigned among the agents to realize an envy-free outcome. In this setup, we bound the subsidy required to attain envy-freeness among agents with dichotomous valuations, i.e., among agents whose marginal value for any good is either zero or one.

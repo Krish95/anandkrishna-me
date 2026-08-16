@@ -42,9 +42,9 @@ const Element = isStatic ? 'span' : 'a';
   }
 
   .tag:not([data-static]):hover {
-    background: var(--marker);
-    border-color: var(--marker);
-    color: #16232a;
+    background: var(--fill-marker);
+    border-color: var(--on-marker);
+    color: var(--on-marker);
   }
 
   .tag__count {
@@ -53,6 +53,6 @@ const Element = isStatic ? 'span' : 'a';
   }
 
   .tag:not([data-static]):hover .tag__count {
-    color: #16232a;
+    color: var(--on-marker);
   }
 </style>

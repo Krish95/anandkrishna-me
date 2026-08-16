@@ -5,10 +5,14 @@
  * collection because a CV is one structured document, not a list of pages: you
  * get type-checking and autocomplete while editing, with no loader in the way.
  *
- * TODO(anand): two start years are inferred, not sourced — your old site listed
- * only end dates. Check both:
- *   - PMRF / Ph.D. start, written here as 2018
- *   - NUS postdoc start, written here as 2023
+ * TODO(anand): every date written as `20XX` below is a placeholder — I could not
+ * source it. LinkedIn blocks automated fetching, so the Poiro and Walmart
+ * entries came from your public headline ("Research @ Poiro | Ex-Walmart | NUS |
+ * IISc") and nothing more. Fill in:
+ *   - Poiro   : start date, and your exact title
+ *   - Walmart : start and end dates, and your exact title
+ *   - NUS     : end date
+ * The Ph.D. start (Aug 2018) is sourced from your advisor's group page.
  */
 
 export interface Role {
@@ -64,30 +68,47 @@ export interface CV {
 
 export const cv: CV = {
   summary:
-    'Postdoctoral Research Fellow at the National University of Singapore, working with Prof. Vincent Y. F. Tan. Previously a Prime Minister’s Research Fellow in the Department of Computer Science and Automation at the Indian Institute of Science, where I completed my Ph.D. under Prof. Y. Narahari and Assoc. Prof. Siddharth Barman.',
+    'Researcher at Poiro. Previously a postdoctoral research fellow at the National University of Singapore working with Prof. Vincent Y. F. Tan, and before that at Walmart. I completed my Ph.D. as a Prime Minister’s Research Fellow in the Department of Computer Science and Automation at the Indian Institute of Science, under Prof. Y. Narahari and Assoc. Prof. Siddharth Barman.',
 
   // The CV PDF linked from the previous site.
   resumeUrl: 'https://drive.google.com/file/d/14H7znegK0vE0-aOFUkDg06msh27qRQDE/view?usp=sharing',
 
   experience: [
     {
+      // TODO(anand): confirm title and start date.
+      role: 'Researcher',
+      org: 'Poiro',
+      orgUrl: 'https://poiro.com',
+      start: '20XX',
+      location: 'Bengaluru, India',
+    },
+    {
+      // TODO(anand): confirm title and dates.
+      role: 'Researcher',
+      org: 'Walmart',
+      start: '20XX',
+      end: '20XX',
+      location: 'Bengaluru, India',
+    },
+    {
       role: 'Postdoctoral Research Fellow',
       org: 'National University of Singapore',
       orgUrl: 'https://nus.edu.sg/',
       start: '2023',
+      end: '20XX',
       location: 'Singapore',
-      summary: 'Working with Prof. Vincent Y. F. Tan.',
+      summary: 'School of Computing, working with Prof. Vincent Y. F. Tan.',
       highlights: [
         'Online learning and optimization under adversarial corruption, including the LEARN invex loss for outlier-oblivious online convex optimization.',
         'Extended p-mean welfare objectives from social choice to stochastic bandits, unifying average and Nash regret in one algorithm (AAAI 2025).',
-        'Sample-efficient alternating minimization for robust phase retrieval.',
+        'Sample-efficient alternating minimization for robust phase retrieval, published in IEEE Transactions on Information Theory.',
       ],
     },
     {
       role: 'Prime Minister’s Research Fellow (PMRF)',
       org: 'Indian Institute of Science',
       orgUrl: 'https://iisc.ac.in/',
-      start: '2018',
+      start: 'Aug 2018',
       end: '2023',
       location: 'Bangalore, India',
       summary:

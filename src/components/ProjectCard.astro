@@ -132,19 +132,22 @@ const href = `/projects/${project.id}`;
     padding: 0.25em 0.5em;
     border-radius: 2px;
     white-space: nowrap;
-    color: #16232a;
+    border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
   }
 
   .project__status[data-status='shipped'] {
-    background: var(--mint);
+    background: var(--fill-mint);
+    color: var(--on-mint);
   }
 
   .project__status[data-status='building'] {
-    background: var(--marker);
+    background: var(--fill-marker);
+    color: var(--on-marker);
   }
 
   .project__status[data-status='experiment'] {
-    background: var(--sky);
+    background: var(--fill-sky);
+    color: var(--on-sky);
   }
 
   .project__status[data-status='archived'] {

@@ -7,7 +7,7 @@ import Band from '@/components/Band.astro';
 import PublicationCard from '@/components/PublicationCard.astro';
 import Icon from '@/components/Icon.astro';
 import { SITE, SOCIALS } from '@/site.config';
-import { getFeaturedPublications, getNotes, getPosts, getPublications } from '@/lib/content';
+import { getFeaturedPublications, getNotes, getPosts } from '@/lib/content';
 import { cv } from '@/data/cv';
 import { mathToHtml } from '@/lib/math';
 import { formatDateShort, isoDate } from '@/lib/format';
@@ -23,9 +23,8 @@ const portraits = import.meta.glob<{ default: ImageMetadata }>(
 );
 const portrait = Object.values(portraits)[0]?.default;
 
-const [featured, allPublications, notes, posts] = await Promise.all([
+const [featured, notes, posts] = await Promise.all([
   getFeaturedPublications(3),
-  getPublications(),
   getNotes(5),
   getPosts(),
 ]);
@@ -64,7 +63,7 @@ const [featured, allPublications, notes, posts] = await Promise.all([
 
         <div class="hero__cta">
           <a href="/publications" class="button">
-            {allPublications.length} publications
+            Publications
             <Icon name="arrow-right" size={15} />
           </a>
           {
@@ -102,20 +101,22 @@ const [featured, allPublications, notes, posts] = await Promise.all([
       <div class="about__text">
         <p class="label about__label">About</p>
         <p>
-          I am a Postdoctoral Research Fellow at the <a
+          I am a researcher at <a href="https://poiro.com" class="marker-link" rel="noopener"
+            >Poiro</a
+          >. Before that I was at Walmart, and before that a Postdoctoral Research Fellow at the <a
             href="https://nus.edu.sg/"
             class="marker-link"
             rel="noopener">National University of Singapore</a
-          > working with Prof. Vincent Y. F. Tan.
+          >, working with Prof. Vincent Y. F. Tan.
         </p>
         <p>
-          Previously, I was a Prime Minister's Research Fellow (PMRF) in the Department of Computer
-          Science and Automation at the <a
+          I obtained my Ph.D. as a Prime Minister's Research Fellow (PMRF) in the Department of
+          Computer Science and Automation at the <a
             href="https://iisc.ac.in/"
             class="marker-link"
             rel="noopener">Indian Institute of Science</a
-          >, where I obtained my Ph.D. I was fortunate to be advised by Prof. Y. Narahari and Assoc.
-          Prof. Siddharth Barman.
+          >, where I was fortunate to be advised by Prof. Y. Narahari and Assoc. Prof. Siddharth
+          Barman.
         </p>
       </div>
 
@@ -342,9 +343,9 @@ const [featured, allPublications, notes, posts] = await Promise.all([
     letter-spacing: 0.12em;
     text-transform: uppercase;
     text-decoration: none;
-    color: #16232a;
-    background: var(--marker);
-    border: 2px solid #16232a;
+    color: var(--btn-ink);
+    background: var(--btn-bg);
+    border: 2px solid var(--btn-border);
     border-radius: var(--radius);
     transition:
       translate 150ms ease,
@@ -353,7 +354,7 @@ const [featured, allPublications, notes, posts] = await Promise.all([
 
   .button:hover {
     translate: -2px -2px;
-    box-shadow: 4px 4px 0 var(--peach);
+    box-shadow: 4px 4px 0 var(--btn-shadow);
   }
 
   .button[data-variant='ghost'] {
@@ -363,7 +364,7 @@ const [featured, allPublications, notes, posts] = await Promise.all([
   }
 
   .button[data-variant='ghost']:hover {
-    box-shadow: 4px 4px 0 var(--marker);
+    box-shadow: 4px 4px 0 var(--btn-shadow);
   }
 
   /* Offset riso blocks behind the portrait. */

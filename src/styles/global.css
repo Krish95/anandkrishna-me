@@ -23,41 +23,99 @@
 :root {
   color-scheme: light;
 
-  /* Surfaces — warm paper stock rather than pure white. */
-  --paper: #fbf8f1;
-  --paper-raised: #fffdf8;
-  --paper-sunken: #f3eee2;
+  /* ---------------------------------------------------------------------
+     "Old photograph" palette. Four swatches:
+       #FDFBD4  aged paper      #D9D7B6  khaki
+       #878672  olive grey      #545333  dark olive
+     Everything below is one of those four or a mix of two of them, so the
+     page reads as a single toned print rather than a colour scheme.
+     Body text (#545333 on #FDFBD4) sits at 7.3:1 — AAA.
+  --------------------------------------------------------------------- */
+
+  /* Surfaces. `raised` is the one value lighter than the lightest swatch:
+     a 50% tint of it toward white, so cards lift off the ground. */
+  --paper: #fdfbd4;
+  --paper-raised: #fefdea;
+  --paper-sunken: #d9d7b6;
 
   /* Text */
-  --ink: #16232a;
-  --ink-soft: #4b5b62;
-  --ink-faint: #7d8b91;
+  --ink: #545333;
+  --ink-soft: #6b6a4f;
+  --ink-faint: #878672;
 
   /* Lines */
-  --rule: #e4ddcf;
-  --rule-strong: #cdc3b0;
+  --rule: #d7d6b5;
+  --rule-strong: #878672;
 
-  /* Riso ink accents — pushed saturated so the colour blocking reads as a
-     deliberate print effect rather than a tint. */
-  --marker: #f7d64f;
-  --marker-wash: color-mix(in srgb, var(--marker) 72%, transparent);
-  --peach: #f2a677;
-  --mint: #86d3b4;
-  --sky: #82c4f2;
-  --lilac: #b5a6e8;
+  /* Tonal accents, all mixes of the four swatches. */
+  --marker: #d9d7b6;
+  --marker-wash: color-mix(in srgb, var(--marker) 90%, transparent);
+  --peach: #878672;
+  --mint: #bcbb9e;
+  --sky: #b9b894;
+  --lilac: #a5a38b;
 
-  /* Tinted section bands */
-  --band-mint: #d6f0e3;
-  --band-butter: #fdf2bd;
-  --band-blush: #fbe1d1;
-  --band-sky: #daecfb;
+  /* Section bands alternate paper -> khaki -> mid tint. */
+  --band-mint: #d9d7b6;
+  --band-butter: #efedc8;
+  --band-blush: #efedc8;
+  --band-sky: #e4e2bf;
 
-  --link: #0b5c78;
-  --focus: #0b5c78;
+  --link: #545333;
+  --focus: #545333;
 
-  --code-bg: #f6f1e5;
-  --code-inline-bg: #efe8d9;
-  --code-border: #e4ddcf;
+  --code-bg: #e9e7c4;
+  --code-inline-bg: #e4e2bf;
+  --code-border: #d7d6b5;
+
+  /* Accent fill pairs: a background and the ink that stays legible on it.
+     Components reference these instead of raw colours, so a theme can change
+     a chip from "saturated fill + dark text" to "tinted fill + light text"
+     without touching a single component. In this palette they are tonal
+     steps rather than hues, and every pair clears 4.5:1. */
+  --fill-marker: #d9d7b6;
+  --on-marker: #545333;
+  --fill-mint: #e4e2bf;
+  --on-mint: #545333;
+  --fill-sky: #efedc8;
+  --on-sky: #545333;
+  --fill-lilac: #d2d0af;
+  --on-lilac: #545333;
+  --fill-peach: #d2d0af;
+  --on-peach: #545333;
+
+  /* Link decoration. In light this is a highlighter sweep; dark redefines it
+     as a hairline underline, which is why every value is a token. */
+  --link-wash: var(--marker-wash);
+  --link-wash-size: 0.42em;
+  --link-wash-pos: 92%;
+  --link-wash-hover: var(--marker);
+  --link-wash-hover-size: 100%;
+  --link-hover-ink: #545333;
+
+  /* Inset underline shared by the nav's current item, the author's own name,
+     and assorted hover states. */
+  --underline-soft: inset 0 -0.35em 0 var(--marker-wash);
+
+  /* Slab struck through section headings. */
+  --struck-bg: #c0bfa2;
+  --struck-height: 0.5em;
+
+  /* Buttons */
+  --btn-bg: #d9d7b6;
+  --btn-ink: #545333;
+  --btn-border: #545333;
+  --btn-shadow: #878672;
+
+  /* Inverted so it cannot be missed against any band. */
+  --skip-bg: #545333;
+  --skip-ink: #fdfbd4;
+
+  --selection-bg: #d9d7b6;
+  --selection-ink: #545333;
+
+  /* Accent used for focus, hovers and the dark theme's link colour. */
+  --accent: #545333;
 
   /* Shape */
   --radius: 3px;
@@ -65,78 +123,174 @@
   --measure: 68ch;
 }
 
-/* Dark palette, applied when the OS asks for it and the user hasn't
-   explicitly chosen light. */
+/* ---------------------------------------------------------------------------
+   Dark palette.
+
+   Declared twice on purpose: once behind the media query for viewers on
+   "system", and once for the explicit toggle so it wins over a light OS.
+   KEEP THE TWO BLOCKS IN SYNC — they are generated from one definition.
+--------------------------------------------------------------------------- */
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
 
-    --paper: #0f1417;
-    --paper-raised: #151d21;
-    --paper-sunken: #0a0f11;
+    /* Cool neutral ground rather than the teal-tinted one. Bands alternate
+       between --paper and --paper-raised, so the rhythm comes from elevation
+       plus the 2px rule, not from colour. */
+    --paper: #101315;
+    --paper-raised: #171b1e;
+    --paper-sunken: #0b0e0f;
 
-    --ink: #e9e5dc;
-    --ink-soft: #a6b2b7;
-    --ink-faint: #78868c;
+    --ink: #e9e8e4;
+    --ink-soft: #a6abad;
+    --ink-faint: #787f82;
 
-    --rule: #242f34;
-    --rule-strong: #384750;
+    --rule: #262a2d;
+    --rule-strong: #3c4347;
 
+    /* Accents stay in the warm family so nothing competes with the marker.
+       They are only used as chip fills here, never as link decoration. */
     --marker: #f7d64f;
-    --marker-wash: color-mix(in srgb, var(--marker) 34%, transparent);
-    --peach: #e29a69;
-    --mint: #6fc7a8;
-    --sky: #6fb6e2;
-    --lilac: #a394d8;
+    --marker-wash: color-mix(in srgb, var(--marker) 26%, transparent);
+    --peach: #d9a06f;
+    --mint: #7cc3a5;
+    --sky: #7ab4d8;
+    --lilac: #a99ada;
 
-    --band-mint: #0e2620;
-    --band-butter: #24200e;
-    --band-blush: #2a1a12;
-    --band-sky: #0f2130;
+    /* Neutral surfaces, not tints. */
+    --band-mint: #171b1e;
+    --band-butter: #171b1e;
+    --band-blush: #171b1e;
+    --band-sky: #141719;
 
-    --link: #8ed2ea;
-    --focus: #8ed2ea;
+    --accent: #e6cd83;
+    --link: #e6cd83;
+    --focus: #e6cd83;
 
-    --code-bg: #121a1e;
-    --code-inline-bg: #1a2429;
-    --code-border: #242f34;
+    /* Chips become tinted fills with light text, instead of bright blocks
+       with dark text — the main thing that made the dark theme shout. */
+    --fill-marker: color-mix(in srgb, var(--marker) 18%, transparent);
+    --on-marker: var(--marker);
+    --fill-mint: color-mix(in srgb, var(--mint) 18%, transparent);
+    --on-mint: var(--mint);
+    --fill-sky: color-mix(in srgb, var(--sky) 18%, transparent);
+    --on-sky: var(--sky);
+    --fill-lilac: color-mix(in srgb, var(--lilac) 20%, transparent);
+    --on-lilac: var(--lilac);
+    --fill-peach: color-mix(in srgb, var(--peach) 18%, transparent);
+    --on-peach: var(--peach);
+
+    /* A hairline that thickens on hover. A translucent yellow bar behind
+       light text reads as a highlighting artefact on a dark ground. */
+    --link-wash: var(--rule-strong);
+    --link-wash-size: 1px;
+    --link-wash-pos: 100%;
+    --link-wash-hover: var(--accent);
+    --link-wash-hover-size: 2px;
+    --link-hover-ink: var(--accent);
+
+    --underline-soft: inset 0 -2px 0 var(--accent);
+
+    /* A thin accent rule rather than a peach slab. */
+    --struck-bg: color-mix(in srgb, var(--accent) 40%, transparent);
+    --struck-height: 0.24em;
+
+    --btn-bg: color-mix(in srgb, var(--accent) 16%, transparent);
+    --btn-ink: var(--accent);
+    --btn-border: color-mix(in srgb, var(--accent) 42%, transparent);
+    --btn-shadow: color-mix(in srgb, var(--accent) 35%, transparent);
+
+    --skip-bg: #e6cd83;
+    --skip-ink: #101315;
+
+    --selection-bg: color-mix(in srgb, var(--accent) 32%, transparent);
+    --selection-ink: #e9e8e4;
+
+    --skip-bg: #e6cd83;
+  --skip-ink: #101315;
+
+  --selection-bg: color-mix(in srgb, var(--accent) 32%, transparent);
+  --selection-ink: #e9e8e4;
+
+  --code-bg: #14181a;
+    --code-inline-bg: #1c2124;
+    --code-border: #262a2d;
   }
 }
 
-/* Explicit dark override — repeats the same values so the toggle wins
-   regardless of the OS preference. */
 :root[data-theme='dark'] {
   color-scheme: dark;
 
-  --paper: #0f1417;
-  --paper-raised: #151d21;
-  --paper-sunken: #0a0f11;
+  /* Cool neutral ground rather than the teal-tinted one. Bands alternate
+     between --paper and --paper-raised, so the rhythm comes from elevation
+     plus the 2px rule, not from colour. */
+  --paper: #101315;
+  --paper-raised: #171b1e;
+  --paper-sunken: #0b0e0f;
 
-  --ink: #e9e5dc;
-  --ink-soft: #a6b2b7;
-  --ink-faint: #78868c;
+  --ink: #e9e8e4;
+  --ink-soft: #a6abad;
+  --ink-faint: #787f82;
 
-  --rule: #242f34;
-  --rule-strong: #384750;
+  --rule: #262a2d;
+  --rule-strong: #3c4347;
 
+  /* Accents stay in the warm family so nothing competes with the marker.
+     They are only used as chip fills here, never as link decoration. */
   --marker: #f7d64f;
-  --marker-wash: color-mix(in srgb, var(--marker) 34%, transparent);
-  --peach: #e29a69;
-  --mint: #6fc7a8;
-  --sky: #6fb6e2;
-  --lilac: #a394d8;
+  --marker-wash: color-mix(in srgb, var(--marker) 26%, transparent);
+  --peach: #d9a06f;
+  --mint: #7cc3a5;
+  --sky: #7ab4d8;
+  --lilac: #a99ada;
 
-  --band-mint: #0e2620;
-  --band-butter: #24200e;
-  --band-blush: #2a1a12;
-  --band-sky: #0f2130;
+  /* Neutral surfaces, not tints. */
+  --band-mint: #171b1e;
+  --band-butter: #171b1e;
+  --band-blush: #171b1e;
+  --band-sky: #141719;
 
-  --link: #8ed2ea;
-  --focus: #8ed2ea;
+  --accent: #e6cd83;
+  --link: #e6cd83;
+  --focus: #e6cd83;
 
-  --code-bg: #121a1e;
-  --code-inline-bg: #1a2429;
-  --code-border: #242f34;
+  /* Chips become tinted fills with light text, instead of bright blocks
+     with dark text — the main thing that made the dark theme shout. */
+  --fill-marker: color-mix(in srgb, var(--marker) 18%, transparent);
+  --on-marker: var(--marker);
+  --fill-mint: color-mix(in srgb, var(--mint) 18%, transparent);
+  --on-mint: var(--mint);
+  --fill-sky: color-mix(in srgb, var(--sky) 18%, transparent);
+  --on-sky: var(--sky);
+  --fill-lilac: color-mix(in srgb, var(--lilac) 20%, transparent);
+  --on-lilac: var(--lilac);
+  --fill-peach: color-mix(in srgb, var(--peach) 18%, transparent);
+  --on-peach: var(--peach);
+
+  /* A hairline that thickens on hover. A translucent yellow bar behind
+     light text reads as a highlighting artefact on a dark ground. */
+  --link-wash: var(--rule-strong);
+  --link-wash-size: 1px;
+  --link-wash-pos: 100%;
+  --link-wash-hover: var(--accent);
+  --link-wash-hover-size: 2px;
+  --link-hover-ink: var(--accent);
+
+  --underline-soft: inset 0 -2px 0 var(--accent);
+
+  /* A thin accent rule rather than a peach slab. */
+  --struck-bg: color-mix(in srgb, var(--accent) 40%, transparent);
+  --struck-height: 0.24em;
+
+  --btn-bg: color-mix(in srgb, var(--accent) 16%, transparent);
+  --btn-ink: var(--accent);
+  --btn-border: color-mix(in srgb, var(--accent) 42%, transparent);
+  --btn-shadow: color-mix(in srgb, var(--accent) 35%, transparent);
+
+  --code-bg: #14181a;
+  --code-inline-bg: #1c2124;
+  --code-border: #262a2d;
 }
 
 /* Make Tailwind's `dark:` variant follow the same three-state logic. */
@@ -214,8 +368,8 @@
   }
 
   ::selection {
-    background: var(--marker);
-    color: #16232a;
+    background: var(--selection-bg);
+    color: var(--selection-ink);
   }
 
   :focus-visible {
@@ -295,19 +449,19 @@
 @utility marker-link {
   color: inherit;
   text-decoration: none;
-  background-image: linear-gradient(var(--marker-wash), var(--marker-wash));
+  background-image: linear-gradient(var(--link-wash), var(--link-wash));
   background-repeat: no-repeat;
-  background-position: 0 92%;
-  background-size: 100% 0.42em;
+  background-position: 0 var(--link-wash-pos);
+  background-size: 100% var(--link-wash-size);
   transition:
     background-size 180ms ease,
     background-color 180ms ease;
 
   &:hover,
   &:focus-visible {
-    background-size: 100% 100%;
-    background-image: linear-gradient(var(--marker), var(--marker));
-    color: #16232a;
+    background-size: 100% var(--link-wash-hover-size);
+    background-image: linear-gradient(var(--link-wash-hover), var(--link-wash-hover));
+    color: var(--link-hover-ink);
   }
 }
 
@@ -324,8 +478,8 @@
     position: absolute;
     inset-inline: 0;
     top: 52%;
-    height: 0.5em;
-    background: var(--peach);
+    height: var(--struck-height);
+    background: var(--struck-bg);
     z-index: -1;
   }
 }
@@ -399,18 +553,18 @@
 .prose a {
   color: inherit;
   text-decoration: none;
-  background-image: linear-gradient(var(--marker-wash), var(--marker-wash));
+  background-image: linear-gradient(var(--link-wash), var(--link-wash));
   background-repeat: no-repeat;
-  background-position: 0 88%;
-  background-size: 100% 0.3em;
+  background-position: 0 var(--link-wash-pos);
+  background-size: 100% var(--link-wash-size);
   transition: background-size 180ms ease;
 }
 
 .prose a:hover,
 .prose a:focus-visible {
-  background-size: 100% 100%;
-  background-image: linear-gradient(var(--marker), var(--marker));
-  color: #16232a;
+  background-size: 100% var(--link-wash-hover-size);
+  background-image: linear-gradient(var(--link-wash-hover), var(--link-wash-hover));
+  color: var(--link-hover-ink);
 }
 
 .prose strong {
@@ -781,9 +935,9 @@
 }
 
 .prose .code-copy[data-copied] {
-  background: var(--marker);
-  border-color: var(--marker);
-  color: #16232a;
+  background: var(--fill-marker);
+  border-color: var(--on-marker);
+  color: var(--on-marker);
   opacity: 1;
 }
 

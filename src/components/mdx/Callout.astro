@@ -98,24 +98,27 @@ const heading = title === false ? null : (title ?? label);
     font-family: var(--font-mono);
     font-size: 0.7rem;
     line-height: 1;
-    color: #16232a;
     flex: none;
   }
 
   .callout[data-type='note'] .callout__glyph {
-    background: var(--sky);
+    background: var(--fill-sky);
+    color: var(--on-sky);
   }
 
   .callout[data-type='tip'] .callout__glyph {
-    background: var(--mint);
+    background: var(--fill-mint);
+    color: var(--on-mint);
   }
 
   .callout[data-type='warning'] .callout__glyph {
-    background: var(--marker);
+    background: var(--fill-marker);
+    color: var(--on-marker);
   }
 
   .callout[data-type='danger'] .callout__glyph {
-    background: var(--peach);
+    background: var(--fill-peach);
+    color: var(--on-peach);
   }
 
   /* Tighten the first/last children so the box doesn't gain double padding. */

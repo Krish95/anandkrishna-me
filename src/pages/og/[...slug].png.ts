@@ -31,13 +31,13 @@ const sans = readFileSync(resolve(fontDir, 'Jost.ttf'));
 
 // Light-theme palette, mirroring src/styles/global.css. Social cards are almost
 // always shown on a light chrome, so they don't follow the dark theme.
-const PAPER = '#fbf8f1';
-const INK = '#16232a';
-const INK_SOFT = '#4b5b62';
-const MARKER = '#f7db6b';
-const PEACH = '#f5c0a2';
-const MINT = '#a3ddc7';
-const RULE = '#e4ddcf';
+const PAPER = '#fdfbd4';
+const INK = '#545333';
+const INK_SOFT = '#6b6a4f';
+const MARKER = '#878672';
+const PEACH = '#878672';
+const MINT = '#c0bfa2';
+const RULE = '#d7d6b5';
 
 type Card = { title: string; kicker: string; footer: string };
 

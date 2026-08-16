@@ -18,15 +18,15 @@ export const SITE = {
 
   /** Meta description fallback and RSS channel description. */
   description:
-    'Postdoctoral Research Fellow at the National University of Singapore. Game theory, online learning, randomized algorithms, and reinforcement learning.',
+    'Researcher at Poiro. Previously a postdoctoral research fellow at NUS and a Prime Minister’s Research Fellow at IISc. Game theory, online learning, randomized algorithms, and reinforcement learning.',
 
   author: {
     name: 'Anand Krishna',
     /** Role line under the name on the homepage. */
-    role: 'Postdoctoral Research Fellow',
+    role: 'Researcher',
     /** Current affiliation, shown next to the role. */
-    affiliation: 'National University of Singapore',
-    affiliationUrl: 'https://nus.edu.sg/',
+    affiliation: 'Poiro',
+    affiliationUrl: 'https://poiro.com',
     /** One sentence in the hero, under the name. */
     tagline:
       'I work on game theory, online learning, and randomized algorithms — mostly on how to allocate things fairly and learn well under adversarial conditions.',

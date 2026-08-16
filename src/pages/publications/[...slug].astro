@@ -172,9 +172,9 @@ const chips = [
     letter-spacing: 0.12em;
     text-transform: uppercase;
     text-decoration: none;
-    color: #16232a;
-    background: var(--marker);
-    border: 1px solid color-mix(in srgb, var(--marker) 70%, black);
+    color: var(--btn-ink);
+    background: var(--btn-bg);
+    border: 1px solid var(--btn-border);
     border-radius: var(--radius);
     transition:
       translate 150ms ease,
@@ -183,7 +183,7 @@ const chips = [
 
   .button:hover {
     translate: 0 -1px;
-    box-shadow: 3px 3px 0 var(--peach);
+    box-shadow: 3px 3px 0 var(--btn-shadow);
   }
 
   .paper__abstract,
@@ -240,9 +240,9 @@ const chips = [
   }
 
   .cite-copy[data-copied] {
-    background: var(--marker);
-    border-color: var(--marker);
-    color: #16232a;
+    background: var(--fill-marker);
+    border-color: var(--on-marker);
+    color: var(--on-marker);
   }
 </style>
 

@@ -1,12 +1,14 @@
 ---
 title: $p$-Mean Regret for Stochastic Bandits
 authors: ['Anand Krishna', 'Philips George John', 'Vincent Y. F. Tan', 'Adarsh Barik']
-date: 2024-06-01
+date: 2024-12-14
 venue: AAAI 2025
 type: conference
 featured: true
 summary: A single UCB-based algorithm that achieves $p$-mean regret bounds across the whole fairness–efficiency spectrum, recovering average and Nash regret as special cases.
-links: {}
+links:
+  doi: https://ojs.aaai.org/index.php/AAAI/article/view/33976
+  arxiv: https://arxiv.org/abs/2412.10751
 ---
 
 In this work, we extend the concept of the $p$-mean welfare objective from social choice theory to study $p$-mean regret in stochastic multi-armed bandit problems. The $p$-mean regret, defined as the difference between the optimal mean among the arms and the $p$-mean of the expected rewards, offers a flexible framework for evaluating bandit algorithms, enabling algorithm designers to balance fairness and efficiency by adjusting the parameter $p$. Our framework encompasses both average cumulative regret and Nash regret as special cases.

@@ -73,7 +73,8 @@ export default defineConfig({
 
     syntaxHighlight: 'shiki',
     shikiConfig: {
-      themes: { light: 'rose-pine-dawn', dark: 'rose-pine-moon' },
+      // Warm, low-contrast pair. Rose Pine's pinks fought the olive palette.
+      themes: { light: 'vitesse-light', dark: 'vitesse-dark' },
       // `false` emits BOTH themes as CSS variables so we switch with CSS only,
       // no JS and no flash of the wrong theme.
       defaultColor: false,
