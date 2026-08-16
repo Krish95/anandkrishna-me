@@ -100,7 +100,11 @@ const publications = defineCollection({
     title: z.string(),
     /** In publication order, exactly as it appears on the paper. */
     authors: z.array(z.string()).min(1),
-    /** Full date if you have it; the year drives grouping and sort order. */
+    /**
+     * The venue date, not the preprint date — the year drives the grouping
+     * headings on /publications, so an AAAI 2025 paper should read 2025.
+     * Only the year is displayed; month/day just control sort order.
+     */
     date: z.coerce.date(),
     /** Venue as you'd cite it: "AAAI 2025", "ITCS 2024", "In Submission". */
     venue: z.string(),

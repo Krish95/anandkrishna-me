@@ -1,7 +1,7 @@
 ---
 title: Achieving Envy-Freeness with Limited Subsidies under Dichotomous Valuations
 authors: ['Siddharth Barman', 'Anand Krishna', 'Y. Narahari', 'Soumyarup Sadhukhan']
-date: 2022-01-19
+date: 2022-07-01
 venue: IJCAI 2022
 type: conference
 summary: Under dichotomous valuations, envy-freeness is reachable with a per-agent subsidy of only $0$ or $1$ — a linear-factor improvement on general monotone valuations.

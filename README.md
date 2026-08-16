@@ -84,13 +84,12 @@ design rather than showing an empty frame.
 
 | Where | What to check |
 |---|---|
-| `src/content/publications/anand-2024-learn.md` | **Venue conflict.** You said AAAI 2026. Adarsh Barik's site lists this as **UAI 2026**, retitled *"Dynamic Regret in Outlier-Oblivious Online Optimization using Nonconvex Robust Losses"*. The file currently says AAAI 2026 under the LEARN title. |
-| `src/data/cv.ts` | Every date written **`20XX`** is a placeholder I could not source: Poiro start, Walmart start/end, NUS end. LinkedIn blocks automated fetching (HTTP 999), so the Poiro and Walmart entries came from your public headline and nothing else — including the titles, both guessed as "Researcher". |
+| `src/content/publications/anand-2024-learn.md` | Resolved to **UAI 2026** under the new title *"Dynamic Regret in Outlier-Oblivious Online Optimization using Nonconvex Robust Losses"*. The filename still says `learn` so the redirect from the old Hugo URL keeps working; the arXiv preprint still carries the LEARN title. |
+| `src/data/cv.ts` | **Still needs you.** Every date written `20XX` is a placeholder: Poiro start, Walmart start/end, NUS end. LinkedIn returns HTTP 999 to any automated request, and search results expose only your headline, so these cannot be recovered without you. Both job titles are guesses ("Researcher"). |
 | `src/content/publications/barman-2020-tight-p-mean-welfare.md` | I **added a fourth author**, Ranjani G. Sundaram, per the ESA 2020 proceedings. Your old site listed only three. |
 | `src/content/publications/barman-2022-nash-welfare-coverage.md` | I **added a fourth author**, Soumyarup Sadhukhan, per arXiv. Your old site listed only three. Also corrected the spelling from "Sadhukan" on the IJCAI paper. |
 | `src/content/publications/barman-2020-tight-p-mean-welfare.md` | Your old abstract read "p-mean welfare at least $8n$ times the optimal". I wrote $\frac{1}{8n}$, matching the ESA proceedings. |
-| `src/content/publications/barik-2024-robust-phase-retrieval.md` | Dated **2025** (journal publication) rather than 2024 (arXiv), so it groups under 2025. |
-| `src/site.config.ts` | Public email is `anandkrishna1995@live.com`, from your old site. You write from `anand@poiro.com`. |
+| All publication `date:` fields | Papers are dated by **venue year, not preprint year**, so the year headings on /publications mean what they say — the AAAI 2025 paper reads 2025, not 2024. Only the year is shown; the month is there to control sort order. |
 | `src/site.config.ts` | DBLP link is a *search* URL. Replace it with your canonical author page. |
 | Old content | Talks, slides and events from the Wowchemy site were all demo entries, so those sections don't exist here. `public/_redirects` sends their URLs home. |
 

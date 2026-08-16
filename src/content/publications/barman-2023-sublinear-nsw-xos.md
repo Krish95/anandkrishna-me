@@ -1,7 +1,7 @@
 ---
 title: Sublinear Approximation Algorithm for Nash Social Welfare with XOS Valuations
 authors: ['Siddharth Barman', 'Anand Krishna', 'Pooja Kulkarni', 'Shivika Narang']
-date: 2023-09-01
+date: 2024-01-01
 venue: ITCS 2024
 type: conference
 summary: Breaks the $O(n)$-approximation barrier for Nash social welfare under XOS valuations, using demand and XOS oracles.

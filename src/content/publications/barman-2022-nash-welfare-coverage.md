@@ -2,7 +2,7 @@
 title: Nash Welfare Guarantees for Fair and Efficient Coverage
 # Fourth author added: your old site listed only three.
 authors: ['Siddharth Barman', 'Anand Krishna', 'Y. Narahari', 'Soumyarup Sadhukhan']
-date: 2022-09-01
+date: 2022-12-01
 venue: WINE 2022
 type: conference
 summary: A polynomial-time $(18+o(1))$-approximation for Nash social welfare in coverage problems, with a matching APX-hardness result.

@@ -1,14 +1,14 @@
 ---
-# TODO(anand): venue conflict. You told me AAAI 2026; Adarsh Barik's site lists
-# this as UAI 2026 and retitled "Dynamic Regret in Outlier-Oblivious Online
-# Optimization using Nonconvex Robust Losses". Confirm venue and title.
-title: 'LEARN: An Invex Loss for Outlier Oblivious Robust Online Optimization'
+# Slug kept as `anand-2024-learn` so the redirect from the old Hugo URL stays
+# valid. The arXiv preprint is still titled "LEARN: An Invex Loss for Outlier
+# Oblivious Robust Online Optimization".
+title: Dynamic Regret in Outlier-Oblivious Online Optimization using Nonconvex Robust Losses
 authors: ['Adarsh Barik', 'Anand Krishna', 'Vincent Y. F. Tan']
-date: 2024-08-12
-venue: AAAI 2026
+date: 2026-07-01
+venue: UAI 2026
 type: conference
 featured: true
-summary: A non-convex but invex loss that tolerates an unknown number of corrupted rounds, with tight dynamic regret guarantees and no Lipschitz assumption.
+summary: A non-convex but invex loss (LEARN) that tolerates an unknown number of corrupted rounds, with tight dynamic regret guarantees and no Lipschitz assumption.
 links:
   arxiv: https://arxiv.org/abs/2408.06297
 ---

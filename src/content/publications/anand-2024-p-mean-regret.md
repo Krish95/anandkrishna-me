@@ -1,7 +1,7 @@
 ---
 title: $p$-Mean Regret for Stochastic Bandits
 authors: ['Anand Krishna', 'Philips George John', 'Vincent Y. F. Tan', 'Adarsh Barik']
-date: 2024-12-14
+date: 2025-02-01
 venue: AAAI 2025
 type: conference
 featured: true
