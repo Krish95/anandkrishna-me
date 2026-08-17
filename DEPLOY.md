@@ -153,18 +153,28 @@ gives you preview URLs on pull requests.
 
 ---
 
-## Pushing again later
+## Pushing — done, via an SSH deploy key
 
-The keychain on this machine holds the anandpoiro credential for github.com, and
-this repo belongs to Krish95, so a bare `git push` here will be refused. Changing
-the keychain entry is not an option — it would break pushes for poiro repos.
+`git push` works from this repo with no token and no prompt.
 
-Pick whichever suits:
+The keychain on this machine answers for github.com with the **anandpoiro**
+credential, and this repo belongs to **Krish95**, so HTTPS pushes were refused —
+and rewriting that keychain entry would have broken pushes for poiro repos. An
+SSH key sidesteps the whole conflict.
 
-- **SSH deploy key (recommended).** A key dedicated to this one repo, with the
-  remote switched to SSH and `core.sshCommand` set locally to use it. No token on
-  disk, no interference with anything else, and `git push` then just works.
-- **Repo-scoped token store.** Keep a fine-grained token in a 600-permission file
-  outside the repo, wired up with a local `credential.helper` and
-  `credential.useHttpPath`, so it applies to this repo only.
-- **Nothing.** Supply a token per push, as was done for the first one.
+What is set up, all of it scoped to this repo:
+
+| Thing | Value |
+|---|---|
+| Key | `~/.ssh/anandkrishna-me-deploy` (ed25519, no passphrase, `600`) |
+| Registered as | a **write** deploy key on `Krish95/anandkrishna-me` |
+| Remote | `git@github.com:Krish95/anandkrishna-me.git` |
+| `core.sshCommand` | local to this repo, with `IdentitiesOnly=yes` |
+
+`IdentitiesOnly=yes` matters: without it, ssh offers every key in your agent and
+GitHub may match a different identity. Your global git and SSH config are
+untouched.
+
+A deploy key grants access to **this repository only** — unlike a personal token,
+it cannot reach anything else in your account. To revoke it, delete it from the
+repo's *Settings → Deploy keys*.
