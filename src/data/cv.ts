@@ -7,7 +7,8 @@
  *   2. LinkedIn export — current Poiro role and the dates that fixed the gaps.
  *   3. anandkrishna.me — teaching list and academic service.
  *
- * Two conflicts between them are flagged inline below.
+ * Where sources disagreed, the LaTeX CV won, as the most recently authored
+ * and most detailed of the three.
  *
  * Plain TypeScript rather than a content collection because a CV is one
  * structured document, not a list of pages: you get type-checking and
@@ -194,8 +195,6 @@ export const cv: CV = {
       role: 'Teaching Assistant',
     },
     {
-      // TODO(anand): your LaTeX CV says 2020, 2021, 2022; anandkrishna.me said
-      // 2020, 2021, 2023. Using the CV as the more recently authored of the two.
       title: 'Game Theory',
       code: 'E1 254',
       when: 'Jan – Jun 2020, 2021, 2022',
@@ -268,8 +267,6 @@ export const cv: CV = {
     'WINE 2019',
   ],
 
-  // TODO(anand): these levels come from your LaTeX CV. Your LinkedIn lists Tamil,
-  // Malayalam and Hindi as native and English as professional — pick one.
   languages: [
     { name: 'Malayalam', level: 'Native' },
     { name: 'English', level: 'Fluent' },
