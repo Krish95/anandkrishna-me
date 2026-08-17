@@ -73,14 +73,14 @@ export const cv: CV = {
     'I lead Data Science & AI at Poiro. Previously a Postdoctoral Research Fellow at the National University of Singapore, and a Prime Minister’s Research Fellow in the Department of Computer Science and Automation at the Indian Institute of Science, where I completed my Ph.D. under Prof. Y. Narahari and Assoc. Prof. Siddharth Barman.',
 
   /**
-   * No CV PDF yet — deliberately unset.
+   * Generated from this very page: `npm run cv:pdf` renders /cv through the
+   * print stylesheet into `public/anand-krishna-cv.pdf`, so the PDF and the web
+   * CV can never drift. Re-run it after editing anything in this file.
    *
-   * The Google Drive link on your old site was the talk video for the WINE 2022
-   * paper, not a CV; it now sits on that publication instead. Set this to a real
-   * URL (or drop a file in `public/` and point at `/anand-krishna-cv.pdf`) and the
-   * "Full CV (PDF)" button reappears on /cv automatically.
+   * (The Google Drive link on the old site was the talk video for the WINE 2022
+   * paper, not a CV — it now sits on that publication instead.)
    */
-  // resumeUrl: '/anand-krishna-cv.pdf',
+  resumeUrl: '/anand-krishna-cv.pdf',
 
   experience: [
     {

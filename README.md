@@ -8,8 +8,13 @@ npm run dev      # http://localhost:4321, hot reload
 npm run build    # static output + search index into dist/
 npm run preview  # serve dist/ (use this to test search)
 npm run check    # TypeScript + Astro diagnostics
+npm run cv:pdf   # re-render public/anand-krishna-cv.pdf from /cv
 npm run deploy   # build, then upload to Cloudflare Pages
 ```
+
+Note that `astro preview` in Astro 7 is a managed singleton daemon — a second
+invocation reports the running one rather than starting another. Use
+`npx astro preview stop` / `status` / `logs`.
 
 Search is indexed from the built HTML by Pagefind, so `/search` is empty under
 `npm run dev` and only works after `npm run build`.
@@ -61,6 +66,22 @@ automatically wherever the author list renders — it matches on
 `src/data/cv.ts` — a typed TypeScript file rather than Markdown, so your editor
 autocompletes the fields and a typo fails `npm run check`. Sections: experience,
 education, teaching, awards, service, languages, skills.
+
+**The PDF is generated from the page, not maintained separately.** `npm run cv:pdf`
+renders `/cv` through the print stylesheet into `public/anand-krishna-cv.pdf`, which
+is what the "Full CV (PDF)" button links to. Re-run it after editing `cv.ts` so the
+two can't drift. Failing that, opening `/cv` in a browser and using Print → Save as
+PDF uses the identical stylesheet.
+
+The print view is not the screen view: site chrome, buttons and the social links
+drop out, colour flattens to ink on white, a letterhead carries your name, role,
+contact and summary, and the **full publication list renders** in place of the
+"see the website" pointer — a printed CV with no publications on it is no use to
+whoever is holding it.
+
+`npm run cv:pdf` needs Chrome or Chromium installed. It drives it through
+`playwright-core` rather than depending on `playwright`, which would pull a ~300MB
+browser of its own; it is an authoring tool and deliberately not part of the build.
 
 ### Posts
 
