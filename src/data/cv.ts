@@ -72,8 +72,15 @@ export const cv: CV = {
   summary:
     'I lead Data Science & AI at Poiro. Previously a Postdoctoral Research Fellow at the National University of Singapore, and a Prime Minister’s Research Fellow in the Department of Computer Science and Automation at the Indian Institute of Science, where I completed my Ph.D. under Prof. Y. Narahari and Assoc. Prof. Siddharth Barman.',
 
-  // The CV PDF linked from the previous site.
-  resumeUrl: 'https://drive.google.com/file/d/14H7znegK0vE0-aOFUkDg06msh27qRQDE/view?usp=sharing',
+  /**
+   * No CV PDF yet — deliberately unset.
+   *
+   * The Google Drive link on your old site was the talk video for the WINE 2022
+   * paper, not a CV; it now sits on that publication instead. Set this to a real
+   * URL (or drop a file in `public/` and point at `/anand-krishna-cv.pdf`) and the
+   * "Full CV (PDF)" button reappears on /cv automatically.
+   */
+  // resumeUrl: '/anand-krishna-cv.pdf',
 
   experience: [
     {

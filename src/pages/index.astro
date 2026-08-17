@@ -67,14 +67,12 @@ const [featured, notes, posts] = await Promise.all([
             Publications
             <Icon name="arrow-right" size={15} />
           </a>
-          {
-            cv.resumeUrl && (
-              <a href={cv.resumeUrl} class="button" data-variant="ghost" rel="noopener">
-                CV
-                <Icon name="arrow-up-right" size={14} />
-              </a>
-            )
-          }
+          {/* Points at the CV page, not a PDF — the page is always there, and
+              the PDF button appears on it only once `cv.resumeUrl` is set. */}
+          <a href="/cv" class="button" data-variant="ghost">
+            CV
+            <Icon name="arrow-right" size={15} />
+          </a>
         </div>
       </div>
 
