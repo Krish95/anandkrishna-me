@@ -44,6 +44,7 @@ const [featured, notes, posts] = await Promise.all([
           <a href={SITE.author.affiliationUrl} class="marker-link" rel="noopener"
             >{SITE.author.affiliation}</a
           >
+          <span class="hero__location">{SITE.author.location}</span>
         </p>
 
         <p class="hero__tagline">{SITE.author.tagline}</p>
@@ -101,9 +102,13 @@ const [featured, notes, posts] = await Promise.all([
       <div class="about__text">
         <p class="label about__label">About</p>
         <p>
-          I am a researcher at <a href="https://poiro.com" class="marker-link" rel="noopener"
-            >Poiro</a
-          >. Before that I was at Walmart, and before that a Postdoctoral Research Fellow at the <a
+          I lead Data Science &amp; AI at <a
+            href="https://poiro.com"
+            class="marker-link"
+            rel="noopener">Poiro</a
+          >, where we build AI systems and agents that supercharge marketing workflows and bring
+          brands closer to consumers. Before that I was a research consultant at Walmart, and a
+          Postdoctoral Research Fellow at the <a
             href="https://nus.edu.sg/"
             class="marker-link"
             rel="noopener">National University of Singapore</a
@@ -287,6 +292,21 @@ const [featured, notes, posts] = await Promise.all([
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--ink-soft);
+  }
+
+  /* Separated by a rule rather than a bullet, so it reads as metadata. */
+  .hero__location::before {
+    content: '';
+    display: inline-block;
+    width: 1.5rem;
+    margin-inline: 0.7rem 0.6rem;
+    vertical-align: middle;
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .hero__location {
+    color: var(--ink-faint);
+    white-space: nowrap;
   }
 
   .hero__tagline {

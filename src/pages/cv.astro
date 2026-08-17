@@ -152,7 +152,7 @@ import { SITE, SOCIALS } from '@/site.config';
       </ul>
     </section>
 
-    <!-- Skills -->
+    <!-- Skills + languages -->
     <section class="cv__section">
       <h2 class="cv__heading"><span class="struck">Areas &amp; tools</span></h2>
       <div class="groups">
@@ -168,6 +168,19 @@ import { SITE, SOCIALS } from '@/site.config';
             </div>
           ))
         }
+        <div>
+          <p class="label">Languages</p>
+          <ul class="chips">
+            {
+              cv.languages.map((language) => (
+                <li>
+                  {language.name}
+                  <span class="chips__level">{language.level}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -390,6 +403,15 @@ import { SITE, SOCIALS } from '@/site.config';
     background: var(--paper-sunken);
     border: 1px solid var(--rule);
     border-radius: 2px;
+  }
+
+  .chips__level {
+    margin-left: 0.45em;
+    color: var(--ink-faint);
+  }
+
+  .chips__level::before {
+    content: '· ';
   }
 
   .elsewhere {

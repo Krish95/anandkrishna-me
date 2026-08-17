@@ -5,6 +5,11 @@
   date: 2026-05-01
   text: '“Dynamic Regret in Outlier-Oblivious Online Optimization using Nonconvex Robust Losses” accepted at UAI 2026.'
 
+- id: joined-poiro
+  date: 2025-05-01
+  text: Joined Poiro as Lead AI Scientist, leading Data Science & AI.
+  href: https://poiro.com
+
 - id: tit-2025-phase-retrieval
   date: 2025-09-01
   text: '“A Sample Efficient Alternating Minimization-based Algorithm for Robust Phase Retrieval” published in IEEE Transactions on Information Theory.'

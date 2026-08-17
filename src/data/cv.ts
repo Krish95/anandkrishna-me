@@ -1,25 +1,20 @@
 /**
  * CV content.
  *
- * Transcribed from anandkrishna.me. Plain TypeScript rather than a content
- * collection because a CV is one structured document, not a list of pages: you
- * get type-checking and autocomplete while editing, with no loader in the way.
+ * Experience, education and languages are transcribed from your LinkedIn
+ * profile export; teaching, awards and academic service from anandkrishna.me.
+ * Nothing here is a placeholder.
  *
- * TODO(anand): every date written as `20XX` below is a placeholder — I could not
- * source it. LinkedIn blocks automated fetching, so the Poiro and Walmart
- * entries came from your public headline ("Research @ Poiro | Ex-Walmart | NUS |
- * IISc") and nothing more. Fill in:
- *   - Poiro   : start date, and your exact title
- *   - Walmart : start and end dates, and your exact title
- *   - NUS     : end date
- * The Ph.D. start (Aug 2018) is sourced from your advisor's group page.
+ * Plain TypeScript rather than a content collection because a CV is one
+ * structured document, not a list of pages: you get type-checking and
+ * autocomplete while editing, with no loader in the way.
  */
 
 export interface Role {
   role: string;
   org: string;
   orgUrl?: string;
-  /** Display strings so you control the formatting: "Jun 2019", "2023". */
+  /** Display strings so you control the formatting: "May 2025", "2018". */
   start: string;
   /** Omit for a current role — renders as "Present". */
   end?: string;
@@ -38,7 +33,7 @@ export interface Study {
 
 export interface Course {
   title: string;
-  /** e.g. "Aug 2022 – Dec 2022", or several terms. */
+  /** e.g. "Aug – Dec 2022", or several terms. */
   when: string;
   institution: string;
   /** Set when you were the instructor rather than a TA. */
@@ -52,6 +47,12 @@ export interface Award {
   url?: string;
 }
 
+export interface Language {
+  name: string;
+  /** Free text: "Native", "Professional", "Conversational". */
+  level: string;
+}
+
 export interface CV {
   /** Two or three sentences at the top of the page. */
   summary: string;
@@ -63,43 +64,51 @@ export interface CV {
   awards: Award[];
   /** Venues you've reviewed for. */
   service: string[];
+  languages: Language[];
   skills: { group: string; items: string[] }[];
 }
 
 export const cv: CV = {
   summary:
-    'Researcher at Poiro. Previously a postdoctoral research fellow at the National University of Singapore working with Prof. Vincent Y. F. Tan, and before that at Walmart. I completed my Ph.D. as a Prime Minister’s Research Fellow in the Department of Computer Science and Automation at the Indian Institute of Science, under Prof. Y. Narahari and Assoc. Prof. Siddharth Barman.',
+    'I lead Data Science & AI at Poiro. Previously a Postdoctoral Research Fellow at the National University of Singapore, and a Prime Minister’s Research Fellow in the Department of Computer Science and Automation at the Indian Institute of Science, where I completed my Ph.D. under Prof. Y. Narahari and Assoc. Prof. Siddharth Barman.',
 
   // The CV PDF linked from the previous site.
   resumeUrl: 'https://drive.google.com/file/d/14H7znegK0vE0-aOFUkDg06msh27qRQDE/view?usp=sharing',
 
   experience: [
     {
-      // TODO(anand): confirm title and start date.
-      role: 'Researcher',
+      role: 'Lead AI Scientist',
       org: 'Poiro',
       orgUrl: 'https://poiro.com',
-      start: '20XX',
+      start: 'May 2025',
       location: 'Bengaluru, India',
+      summary:
+        'Leading Data Science & AI. Poiro builds AI systems and agents that supercharge marketing workflows and bring brands closer to consumers.',
+      highlights: [
+        'AI systems trained on a brand’s structured and unstructured marketing data — social content, marketplace data, first-party customer data — to build a knowledge representation of the brand and its category.',
+        'Agents that run analytics and data-science workflows over that representation to produce actionable insight and guide marketing execution.',
+        'Used by brands to identify content whitespaces, target creative and creator recommendations at ROI, and audit creator risk before commercial commitments.',
+      ],
     },
     {
-      // TODO(anand): confirm title and dates.
-      role: 'Researcher',
+      role: 'Research Consultant',
       org: 'Walmart',
-      start: '20XX',
-      end: '20XX',
+      start: 'Nov 2024',
+      end: 'Apr 2025',
       location: 'Bengaluru, India',
+      summary:
+        'Developed scalable systems for real-time advertiser query processing to estimate impressions.',
     },
     {
       role: 'Postdoctoral Research Fellow',
       org: 'National University of Singapore',
       orgUrl: 'https://nus.edu.sg/',
-      start: '2023',
-      end: '20XX',
+      start: 'Sep 2023',
+      end: 'Sep 2024',
       location: 'Singapore',
       summary: 'School of Computing, working with Prof. Vincent Y. F. Tan.',
       highlights: [
-        'Online learning and optimization under adversarial corruption, including the LEARN invex loss for outlier-oblivious online convex optimization.',
+        'Online learning and optimization under adversarial corruption, including the LEARN invex loss for outlier-oblivious online convex optimization (UAI 2026).',
         'Extended p-mean welfare objectives from social choice to stochastic bandits, unifying average and Nash regret in one algorithm (AAAI 2025).',
         'Sample-efficient alternating minimization for robust phase retrieval, published in IEEE Transactions on Information Theory.',
       ],
@@ -109,8 +118,8 @@ export const cv: CV = {
       org: 'Indian Institute of Science',
       orgUrl: 'https://iisc.ac.in/',
       start: 'Aug 2018',
-      end: '2023',
-      location: 'Bangalore, India',
+      end: 'Aug 2023',
+      location: 'Bengaluru, India',
       summary:
         'Ph.D. in the Department of Computer Science and Automation, advised by Prof. Y. Narahari and Assoc. Prof. Siddharth Barman.',
       highlights: [
@@ -120,15 +129,17 @@ export const cv: CV = {
     },
     {
       role: 'Research Intern',
-      org: 'IBM Research',
+      org: 'IBM India Research Lab',
       start: 'Jun 2019',
       end: 'Sep 2019',
+      location: 'Bengaluru, India',
     },
     {
-      role: 'R&D Intern',
+      role: 'Research and Development Intern',
       org: 'Aindra Systems',
       start: 'Jun 2018',
       end: 'Jul 2018',
+      location: 'Bengaluru, India',
     },
   ],
 
@@ -136,12 +147,13 @@ export const cv: CV = {
     {
       qualification: 'Ph.D. in Computer Science',
       institution: 'Indian Institute of Science',
+      start: '2018',
       end: '2023',
       note: 'Department of Computer Science and Automation. Advised by Prof. Y. Narahari and Assoc. Prof. Siddharth Barman.',
     },
     {
-      qualification: 'B.Tech (Hons.) in Computer Science',
-      institution: 'Govt. Engineering College, Thrissur, Kerala',
+      qualification: 'B.Tech (Honours) in Computer Engineering',
+      institution: 'Government Engineering College, Thrissur',
       end: '2017',
     },
   ],
@@ -219,6 +231,13 @@ export const cv: CV = {
     'WINE 2019',
   ],
 
+  languages: [
+    { name: 'Tamil', level: 'Native' },
+    { name: 'Malayalam', level: 'Native' },
+    { name: 'Hindi', level: 'Native' },
+    { name: 'English', level: 'Professional' },
+  ],
+
   skills: [
     {
       group: 'Research areas',
@@ -229,11 +248,13 @@ export const cv: CV = {
         'Randomized Algorithms',
         'Reinforcement Learning',
         'Optimization',
+        'Machine Learning',
       ],
     },
     {
+      // TODO(anand): LinkedIn only surfaced three top skills. Extend this list.
       group: 'Tools',
-      items: ['Python', 'C++', 'LaTeX', 'NumPy', 'PyTorch'],
+      items: ['C++', 'Python', 'LaTeX'],
     },
   ],
 };

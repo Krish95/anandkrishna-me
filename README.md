@@ -60,7 +60,7 @@ automatically wherever the author list renders — it matches on
 
 `src/data/cv.ts` — a typed TypeScript file rather than Markdown, so your editor
 autocompletes the fields and a typo fails `npm run check`. Sections: experience,
-education, teaching, awards, service, skills.
+education, teaching, awards, service, languages, skills.
 
 ### Posts
 
@@ -85,7 +85,9 @@ design rather than showing an empty frame.
 | Where | What to check |
 |---|---|
 | `src/content/publications/anand-2024-learn.md` | Resolved to **UAI 2026** under the new title *"Dynamic Regret in Outlier-Oblivious Online Optimization using Nonconvex Robust Losses"*. The filename still says `learn` so the redirect from the old Hugo URL keeps working; the arXiv preprint still carries the LEARN title. |
-| `src/data/cv.ts` | **Still needs you.** Every date written `20XX` is a placeholder: Poiro start, Walmart start/end, NUS end. LinkedIn returns HTTP 999 to any automated request, and search results expose only your headline, so these cannot be recovered without you. Both job titles are guesses ("Researcher"). |
+| `src/data/cv.ts` | Experience, education and languages are transcribed from your LinkedIn PDF export — no placeholders left. Two notes: your old site said the B.Tech was in **Computer Science**, LinkedIn says **Computer Engineering** (I used LinkedIn), and I deliberately left **high school** off, since academic CVs don't carry it. |
+| `src/data/cv.ts` | The **Tools** list has only three entries — LinkedIn surfaced just "Machine Learning Algorithms, Computer Science, C++". Extend it. |
+| `src/site.config.ts` | You now have **three** known addresses: `anandkrishna1995@live.com` (site, your choice), `anand@poiro.com` (work), `anandkrishna011095@gmail.com` (LinkedIn contact). Only the first is published. |
 | `src/content/publications/barman-2020-tight-p-mean-welfare.md` | I **added a fourth author**, Ranjani G. Sundaram, per the ESA 2020 proceedings. Your old site listed only three. |
 | `src/content/publications/barman-2022-nash-welfare-coverage.md` | I **added a fourth author**, Soumyarup Sadhukhan, per arXiv. Your old site listed only three. Also corrected the spelling from "Sadhukan" on the IJCAI paper. |
 | `src/content/publications/barman-2020-tight-p-mean-welfare.md` | Your old abstract read "p-mean welfare at least $8n$ times the optimal". I wrote $\frac{1}{8n}$, matching the ESA proceedings. |

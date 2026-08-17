@@ -18,18 +18,21 @@ export const SITE = {
 
   /** Meta description fallback and RSS channel description. */
   description:
-    'Researcher at Poiro. Previously a postdoctoral research fellow at NUS and a Prime Minister’s Research Fellow at IISc. Game theory, online learning, randomized algorithms, and reinforcement learning.',
+    'Lead AI Scientist at Poiro, leading Data Science & AI. Previously a Postdoctoral Research Fellow at NUS and a Prime Minister’s Research Fellow at IISc. Game theory, online learning, randomized algorithms, and reinforcement learning.',
 
   author: {
     name: 'Anand Krishna',
     /** Role line under the name on the homepage. */
-    role: 'Researcher',
+    role: 'Lead AI Scientist',
     /** Current affiliation, shown next to the role. */
     affiliation: 'Poiro',
+    // poiro.ai redirects here, so this is the canonical host.
     affiliationUrl: 'https://poiro.com',
+    /** Shown after the affiliation in the hero. */
+    location: 'Bengaluru, India',
     /** One sentence in the hero, under the name. */
     tagline:
-      'I work on game theory, online learning, and randomized algorithms — mostly on how to allocate things fairly and learn well under adversarial conditions.',
+      'I lead Data Science & AI at Poiro. My research is on game theory, online learning, and randomized algorithms — allocating things fairly, and learning well under adversarial conditions.',
     email: 'anandkrishna1995@live.com',
     /** Drop a square image at `src/assets/portrait.{jpg,png,webp}` to show it. */
     portraitAlt: 'Portrait of Anand Krishna',
