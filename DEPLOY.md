@@ -26,37 +26,21 @@ job is to confirm it did, before flipping the nameservers.
 
 ---
 
-## 1. GitHub
+## 1. GitHub — done
 
-This is your personal academic site, and your site's GitHub link and old CV both
-point at **Krish95** — so that's where the repo belongs. But the `gh` CLI on this
-machine is signed in as **anandpoiro**, and `gh auth login` switches the *active*
-account, which would disrupt work running under the poiro account.
+Pushed to <https://github.com/Krish95/anandkrishna-me> (public, `main`).
 
-So don't run `gh auth login`. Two ways round it, neither touching your gh session:
+Done without touching the `gh` CLI, which stays signed in as **anandpoiro** so
+work running under that account is unaffected. The push used a fine-grained
+Krish95 token supplied for that one command through an environment variable and a
+throwaway credential helper: nothing was written to `.git/config` and nothing
+entered the keychain.
 
-**A. Create the repo in the browser, push with a scoped token.**
+A local-only git identity is set for this repo, so commits here are authored as
+`Anand Krishna <anandkrishna1995@live.com>` rather than the global poiro identity.
 
-1. <https://github.com/new> while signed in as Krish95 — name it
-   `anandkrishna-me`, **private or public as you prefer, no README, no
-   .gitignore, no licence** (the repo already has all three).
-2. Generate a fine-grained token limited to just that repo, with
-   **Contents: read and write**:
-   <https://github.com/settings/personal-access-tokens/new>
-3. Hand it over and I push with a one-shot credential helper — it is never
-   written to `.git/config`, never stored in a keychain, and never touches `gh`.
-   Revoke it straight after if you like; the push is the only thing it's for.
-
-**B. Push to anandpoiro now, transfer later.**
-
-Zero effort now: I create and push under the already-authenticated account, and
-you transfer the repo to Krish95 from GitHub's settings whenever convenient.
-Transfers preserve history and leave redirects behind, so nothing breaks.
-
-Deployment doesn't care which account owns it — Cloudflare Pages can also deploy
-straight from this machine with Wrangler, with no Git remote at all.
-
----
+**Future pushes need a credential.** The system keychain helper will offer the
+anandpoiro token, which this repo rejects. See "Pushing again later" at the end.
 
 ## 2. Cloudflare account — you: sign up
 
@@ -136,3 +120,21 @@ in the Cloudflare dashboard instead of uploading with Wrangler:
 Direct `npm run deploy` uploads and Git-connected builds are mutually exclusive
 in practice — pick one. Git-connected is better once the repo is up, because it
 gives you preview URLs on pull requests.
+
+---
+
+## Pushing again later
+
+The keychain on this machine holds the anandpoiro credential for github.com, and
+this repo belongs to Krish95, so a bare `git push` here will be refused. Changing
+the keychain entry is not an option — it would break pushes for poiro repos.
+
+Pick whichever suits:
+
+- **SSH deploy key (recommended).** A key dedicated to this one repo, with the
+  remote switched to SSH and `core.sshCommand` set locally to use it. No token on
+  disk, no interference with anything else, and `git push` then just works.
+- **Repo-scoped token store.** Keep a fine-grained token in a 600-permission file
+  outside the repo, wired up with a local `credential.helper` and
+  `credential.useHttpPath`, so it applies to this repo only.
+- **Nothing.** Supply a token per push, as was done for the first one.
