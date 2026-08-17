@@ -42,49 +42,68 @@ A local-only git identity is set for this repo, so commits here are authored as
 **Future pushes need a credential.** The system keychain helper will offer the
 anandpoiro token, which this repo rejects. See "Pushing again later" at the end.
 
-## 2. Cloudflare account — you: sign up
+## 2. Cloudflare account — done
 
-<https://dash.cloudflare.com/sign-up> — email, password, verify the email. Free
-plan is all this needs.
+Account created. Nothing else needed here.
 
 ---
 
-## 3. Add the domain — you: click through, and check mail
+## 3. Connect the repo — you: about six clicks, once
+
+This is the only route that gives automatic builds on every push, and it has to
+happen in the dashboard because Cloudflare needs to authorise against GitHub.
+It produces a live `*.pages.dev` URL, so no DNS is involved and **mail is not
+touched at this stage**.
+
+1. <https://dash.cloudflare.com> → **Workers & Pages** → **Create** →
+   **Pages** tab → **Connect to Git**.
+2. **Connect GitHub.** Authorise as **Krish95** — check the account shown in the
+   GitHub prompt, since a browser signed in as `anandpoiro` will offer that
+   account instead. Grant access to `anandkrishna-me` (or all repositories).
+3. Pick `anandkrishna-me` → **Begin setup**.
+4. Build settings:
+
+   | Field | Value |
+   |---|---|
+   | Project name | `anandkrishna-me` |
+   | Production branch | `main` |
+   | Framework preset | **Astro** |
+   | Build command | `npm run build` |
+   | Build output directory | `dist` |
+
+5. Under **Environment variables**, add `NODE_VERSION` = `22`. `.nvmrc` pins it
+   too, but the variable is what Cloudflare reads first.
+6. **Save and Deploy.**
+
+The build takes a couple of minutes. When it finishes you get
+`anandkrishna-me.pages.dev` — send me that URL and I'll verify the deployment
+properly: every route, the social cards, search, the redirects and the security
+headers.
+
+Every push to `main` rebuilds from here on, and pull requests get their own
+preview URLs.
+
+---
+
+## 4. Attach the domain — only once you're happy with pages.dev
+
+**This is the step that can break mail.** Do it deliberately.
 
 1. Cloudflare dashboard → **Add a site** → `anandkrishna.me` → **Free**.
 2. Cloudflare scans your existing DNS. **Stop and read the record list.**
-   Confirm both MX records above are there. If either is missing, add it:
-   - Type `MX`, Name `@`, Mail server `smtp.secureserver.net`, Priority `0`
-   - Type `MX`, Name `@`, Mail server `mailstore1.secureserver.net`, Priority `10`
+   Confirm both MX records are present:
+   - `MX` `@` → `smtp.secureserver.net`, priority `0`
+   - `MX` `@` → `mailstore1.secureserver.net`, priority `10`
+
+   If either is missing, add it before going any further.
 3. Cloudflare shows two nameservers, like `xxx.ns.cloudflare.com`. Copy both.
 4. GoDaddy → **My Products** → `anandkrishna.me` → **DNS** → **Nameservers** →
    **Change** → **I'll use my own nameservers** → paste both → save.
-
-Then run `bash scripts/check-dns.sh`. Nameservers usually flip within the hour.
-
----
-
-## 4. Connect the site — you: one click, then me
-
-```bash
-npx wrangler login
-```
-
-Approve in the browser. After that I can do the rest from the CLI:
-
-```bash
-npm run deploy          # builds, then uploads dist/ to Cloudflare Pages
-```
-
-The first deploy creates the Pages project (named `anandkrishna-me`, from
-`wrangler.jsonc`) and gives you a live `*.pages.dev` URL immediately — that works
-regardless of DNS, so you can see the real thing before the domain moves.
-
-Attaching the domain, once the nameservers have flipped:
-
-Pages project → **Custom domains** → add `anandkrishna.me` and
-`www.anandkrishna.me`. Cloudflare writes the records itself, replacing the old
-Netlify ones.
+5. Run `bash scripts/check-dns.sh`. It confirms the nameservers flipped and that
+   both mail servers survived. Usually under an hour.
+6. Back in the Pages project → **Custom domains** → add `anandkrishna.me` and
+   `www.anandkrishna.me`. Cloudflare writes the records itself, replacing the
+   Netlify ones.
 
 ---
 
