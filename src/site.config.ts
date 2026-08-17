@@ -31,8 +31,13 @@ export const SITE = {
     /** Shown after the affiliation in the hero. */
     location: 'Bengaluru, India',
     /** One sentence in the hero, under the name. */
+    /**
+     * A colon rather than an em dash on purpose: a break is allowed *before* an
+     * em dash, so a wrapped line could begin with one, which looks like a typo.
+     * Nothing breaks before a colon.
+     */
     tagline:
-      'I lead Data Science & AI at Poiro. My research is on game theory, online learning, and randomized algorithms — allocating things fairly, and learning well under adversarial conditions.',
+      'I lead Data Science & AI at Poiro. My research is on game theory, online learning, and randomized algorithms: how to allocate things fairly, and learn well under adversarial conditions.',
     email: 'anandkrishna1995@live.com',
     /** Drop a square image at `src/assets/portrait.{jpg,png,webp}` to show it. */
     portraitAlt: 'Portrait of Anand Krishna',

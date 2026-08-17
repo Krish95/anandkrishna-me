@@ -313,7 +313,11 @@ const [featured, notes, posts] = await Promise.all([
     line-height: 1.5;
     color: var(--ink-soft);
     max-width: 46ch;
-    text-wrap: pretty;
+    /* `balance`, not `pretty`: pretty only protects the last line from being an
+       orphan and breaks greedily above it, which left a visibly short second
+       line here. `balance` evens every line, which is what a short hero
+       statement wants. */
+    text-wrap: balance;
   }
 
   .hero__links {
