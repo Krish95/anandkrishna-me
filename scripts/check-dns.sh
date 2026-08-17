@@ -71,11 +71,33 @@ if [ -n "$NS_DIRECT" ]; then
 fi
 
 bold "Nameservers"
-NS=$(dig +short NS "$DOMAIN" | sed 's/\.$//' | sort)
-[ -z "$NS" ] && bad "none returned" || while read -r n; do info "$n"; done <<< "$NS"
-if grep -qi "cloudflare" <<< "$NS"; then ok "on Cloudflare"
-elif grep -qi "domaincontrol" <<< "$NS"; then warn "still on GoDaddy — not switched, or not propagated"
-else bad "unrecognised nameservers"; fi
+# The registry is the source of truth. Asking a resolver only tells you what
+# that resolver has cached, which conflates "not changed yet" with "changed and
+# still propagating" — two situations needing completely different responses.
+TLDNS=$(dig +short NS "${DOMAIN##*.}." | head -1)
+REGISTRY=$(dig +norecurse @"$TLDNS" NS "$DOMAIN" +noall +authority +answer 2>/dev/null \
+  | grep -oE '[a-z0-9.-]+\.(cloudflare|domaincontrol)\.com' | sort -u)
+info "at the .${DOMAIN##*.} registry:"
+[ -z "$REGISTRY" ] && info "  (no delegation found)" || while read -r n; do info "  $n"; done <<< "$REGISTRY"
+
+LOCAL=$(dig +short NS "$DOMAIN" | sed 's/\.$//' | sort)
+info "your resolver currently sees:"
+[ -z "$LOCAL" ] && info "  (none)" || while read -r n; do info "  $n"; done <<< "$LOCAL"
+
+if grep -qi "cloudflare" <<< "$REGISTRY"; then
+  if grep -qi "cloudflare" <<< "$LOCAL"; then
+    ok "delegated to Cloudflare, and your resolver agrees"
+  else
+    ok "delegated to Cloudflare at the registry — the switch is done"
+    warn "your resolver still has the old answer cached; nothing to fix, just wait"
+    info "to clear it locally on macOS:"
+    info "  sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
+  fi
+elif grep -qi "domaincontrol" <<< "$REGISTRY"; then
+  warn "still delegated to GoDaddy at the registry — the change has NOT been made"
+else
+  bad "unrecognised delegation"
+fi
 
 bold "Web"
 for host in "$DOMAIN" "www.$DOMAIN"; do
