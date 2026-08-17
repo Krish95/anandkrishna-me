@@ -97,6 +97,17 @@ preview URLs.
 
    If either is missing, add it before going any further.
 3. Cloudflare shows two nameservers, like `xxx.ns.cloudflare.com`. Copy both.
+
+   **Before touching GoDaddy, pre-flight the zone:**
+
+   ```bash
+   bash scripts/check-dns.sh <one-of-your-cloudflare-nameservers>
+   ```
+
+   This queries Cloudflare directly while the domain is still delegated to
+   GoDaddy, so it confirms the mail records are right *before* the switch rather
+   than after mail has already stopped. It prints "safe to change nameservers"
+   only when both MX records are present.
 4. GoDaddy → **My Products** → `anandkrishna.me` → **DNS** → **Nameservers** →
    **Change** → **I'll use my own nameservers** → paste both → save.
 5. Run `bash scripts/check-dns.sh`. It confirms the nameservers flipped and that
