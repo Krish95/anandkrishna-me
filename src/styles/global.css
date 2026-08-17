@@ -23,99 +23,108 @@
 :root {
   color-scheme: light;
 
-  /* ---------------------------------------------------------------------
-     "Old photograph" palette. Four swatches:
-       #FDFBD4  aged paper      #D9D7B6  khaki
-       #878672  olive grey      #545333  dark olive
-     Everything below is one of those four or a mix of two of them, so the
-     page reads as a single toned print rather than a colour scheme.
-     Body text (#545333 on #FDFBD4) sits at 7.3:1 — AAA.
-  --------------------------------------------------------------------- */
+  /* =====================================================================
+     PALETTE BASES — "Stone": warm neutral grey, no yellow in it.
+     The only values a light palette needs to define.
+     Everything below is derived from these five with color-mix, so trying
+     a different scheme means editing this block and nothing else.
+     ===================================================================== */
+  --base-paper: #faf9f8; /* page ground */
+  --base-surface: #ffffff; /* cards, raised surfaces */
+  --base-tint: #f0edea; /* sunken surfaces and section bands */
+  --base-ink: #221f1c; /* body text */
+  --base-accent: #6e5a48; /* links, buttons, marks */
 
-  /* Surfaces. `raised` is the one value lighter than the lightest swatch:
-     a 50% tint of it toward white, so cards lift off the ground. */
-  --paper: #fdfbd4;
-  --paper-raised: #fefdea;
-  --paper-sunken: #d9d7b6;
+  /* Semantic hues for callouts only — kept deliberately desaturated, and
+     identical across palettes so note/tip/warning/danger stay legible as
+     categories without turning the page into a colour wheel. */
+  --hue-info: #6b8ba1;
+  --hue-ok: #6c9079;
+  --hue-warn: #a1854f;
+  --hue-alert: #a4705f;
 
-  /* Text */
-  --ink: #545333;
-  --ink-soft: #6b6a4f;
-  --ink-faint: #878672;
+  /* ---- Derived: surfaces --------------------------------------------- */
+  --paper: var(--base-paper);
+  --paper-raised: var(--base-surface);
+  --paper-sunken: var(--base-tint);
 
-  /* Lines */
-  --rule: #d7d6b5;
-  --rule-strong: #878672;
+  /* ---- Derived: text ------------------------------------------------- */
+  --ink: var(--base-ink);
+  --ink-soft: color-mix(in srgb, var(--base-ink) 72%, var(--base-paper));
+  --ink-faint: color-mix(in srgb, var(--base-ink) 50%, var(--base-paper));
 
-  /* Tonal accents, all mixes of the four swatches. */
-  --marker: #d9d7b6;
-  --marker-wash: color-mix(in srgb, var(--marker) 90%, transparent);
-  --peach: #878672;
-  --mint: #bcbb9e;
-  --sky: #b9b894;
-  --lilac: #a5a38b;
+  /* ---- Derived: lines ------------------------------------------------ */
+  --rule: color-mix(in srgb, var(--base-ink) 13%, var(--base-paper));
+  --rule-strong: color-mix(in srgb, var(--base-ink) 32%, var(--base-paper));
 
-  /* Section bands alternate paper -> khaki -> mid tint. */
-  --band-mint: #d9d7b6;
-  --band-butter: #efedc8;
-  --band-blush: #efedc8;
-  --band-sky: #e4e2bf;
+  /* ---- Derived: accent marks ----------------------------------------- */
+  --accent: var(--base-accent);
+  --link: var(--base-accent);
+  --focus: var(--base-accent);
+  /* Small solid marks: list bullets, margin-note rules, offset blocks. */
+  --accent-mark: color-mix(in srgb, var(--base-accent) 55%, var(--base-paper));
 
-  --link: #545333;
-  --focus: #545333;
+  --marker: color-mix(in srgb, var(--base-accent) 26%, var(--base-paper));
+  --marker-wash: color-mix(in srgb, var(--base-accent) 15%, transparent);
 
-  --code-bg: #e9e7c4;
-  --code-inline-bg: #e4e2bf;
-  --code-border: #d7d6b5;
+  /* Callout accents map to the semantic hues. */
+  --sky: var(--hue-info);
+  --mint: var(--hue-ok);
+  --lilac: var(--hue-warn);
+  --peach: var(--hue-alert);
 
-  /* Accent fill pairs: a background and the ink that stays legible on it.
-     Components reference these instead of raw colours, so a theme can change
-     a chip from "saturated fill + dark text" to "tinted fill + light text"
-     without touching a single component. In this palette they are tonal
-     steps rather than hues, and every pair clears 4.5:1. */
-  --fill-marker: #d9d7b6;
-  --on-marker: #545333;
-  --fill-mint: #e4e2bf;
-  --on-mint: #545333;
-  --fill-sky: #efedc8;
-  --on-sky: #545333;
-  --fill-lilac: #d2d0af;
-  --on-lilac: #545333;
-  --fill-peach: #d2d0af;
-  --on-peach: #545333;
+  /* ---- Derived: section bands ---------------------------------------- */
+  /* Two steps, alternating, so the rhythm is elevation rather than colour. */
+  --band-mint: var(--base-tint);
+  --band-blush: var(--base-tint);
+  --band-butter: color-mix(in srgb, var(--base-tint) 52%, var(--base-paper));
+  --band-sky: color-mix(in srgb, var(--base-tint) 52%, var(--base-paper));
 
-  /* Link decoration. In light this is a highlighter sweep; dark redefines it
-     as a hairline underline, which is why every value is a token. */
+  /* ---- Derived: code ------------------------------------------------- */
+  --code-bg: color-mix(in srgb, var(--base-tint) 62%, var(--base-paper));
+  --code-inline-bg: color-mix(in srgb, var(--base-tint) 88%, var(--base-paper));
+  --code-border: color-mix(in srgb, var(--base-ink) 11%, var(--base-paper));
+
+  /* ---- Derived: chip fill pairs -------------------------------------- */
+  /* Components read these instead of raw colours, so dark mode can flip a
+     chip from "tinted fill + dark text" to the reverse without edits. */
+  --fill-marker: color-mix(in srgb, var(--base-accent) 15%, var(--base-paper));
+  --on-marker: var(--base-ink);
+  --fill-mint: color-mix(in srgb, var(--base-ink) 9%, var(--base-paper));
+  --on-mint: var(--base-ink);
+  --fill-sky: color-mix(in srgb, var(--base-accent) 9%, var(--base-paper));
+  --on-sky: var(--base-ink);
+  --fill-lilac: color-mix(in srgb, var(--base-ink) 14%, var(--base-paper));
+  --on-lilac: var(--base-ink);
+  --fill-peach: color-mix(in srgb, var(--base-accent) 20%, var(--base-paper));
+  --on-peach: var(--base-ink);
+
+  /* ---- Derived: link decoration -------------------------------------- */
+  /* A restrained accent wash that fills in on hover. */
   --link-wash: var(--marker-wash);
-  --link-wash-size: 0.42em;
-  --link-wash-pos: 92%;
+  --link-wash-size: 0.3em;
+  --link-wash-pos: 96%;
   --link-wash-hover: var(--marker);
   --link-wash-hover-size: 100%;
-  --link-hover-ink: #545333;
+  --link-hover-ink: var(--base-ink);
 
-  /* Inset underline shared by the nav's current item, the author's own name,
-     and assorted hover states. */
-  --underline-soft: inset 0 -0.35em 0 var(--marker-wash);
+  --underline-soft: inset 0 -0.28em 0 var(--marker-wash);
 
-  /* Slab struck through section headings. */
-  --struck-bg: #c0bfa2;
-  --struck-height: 0.5em;
+  /* ---- Derived: heading slab ----------------------------------------- */
+  --struck-bg: color-mix(in srgb, var(--base-accent) 20%, var(--base-paper));
+  --struck-height: 0.34em;
 
-  /* Buttons */
-  --btn-bg: #d9d7b6;
-  --btn-ink: #545333;
-  --btn-border: #545333;
-  --btn-shadow: #878672;
+  /* ---- Derived: buttons ---------------------------------------------- */
+  --btn-bg: color-mix(in srgb, var(--base-accent) 12%, var(--base-paper));
+  --btn-ink: var(--base-accent);
+  --btn-border: color-mix(in srgb, var(--base-accent) 38%, var(--base-paper));
+  --btn-shadow: color-mix(in srgb, var(--base-accent) 30%, transparent);
 
-  /* Inverted so it cannot be missed against any band. */
-  --skip-bg: #545333;
-  --skip-ink: #fdfbd4;
+  --skip-bg: var(--base-ink);
+  --skip-ink: var(--base-paper);
 
-  --selection-bg: #d9d7b6;
-  --selection-ink: #545333;
-
-  /* Accent used for focus, hovers and the dark theme's link colour. */
-  --accent: #545333;
+  --selection-bg: color-mix(in srgb, var(--base-accent) 22%, var(--base-paper));
+  --selection-ink: var(--base-ink);
 
   /* Shape */
   --radius: 3px;
@@ -595,7 +604,7 @@
   top: 0.62em;
   width: 0.4em;
   height: 0.4em;
-  background: var(--peach);
+  background: var(--accent-mark);
   border-radius: 1px;
   rotate: 45deg;
 }
@@ -623,7 +632,7 @@
 .prose blockquote {
   margin-inline: 0;
   padding-left: 1.2em;
-  border-left: 3px solid var(--marker);
+  border-left: 3px solid var(--accent-mark);
   font-style: italic;
   color: var(--ink-soft);
 }

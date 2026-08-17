@@ -31,13 +31,15 @@ const sans = readFileSync(resolve(fontDir, 'Jost.ttf'));
 
 // Light-theme palette, mirroring src/styles/global.css. Social cards are almost
 // always shown on a light chrome, so they don't follow the dark theme.
-const PAPER = '#fdfbd4';
-const INK = '#545333';
-const INK_SOFT = '#6b6a4f';
-const MARKER = '#878672';
-const PEACH = '#878672';
-const MINT = '#c0bfa2';
-const RULE = '#d7d6b5';
+// Mirrors the "Stone" light palette in src/styles/global.css. Satori can't read
+// CSS variables, so these are the resolved values — update both together.
+const PAPER = '#faf9f8';
+const INK = '#221f1c';
+const INK_SOFT = '#5f5c5a';
+const MARKER = '#6e5a48';
+const PEACH = '#6e5a48';
+const MINT = '#ada297';
+const RULE = '#dedddb';
 
 type Card = { title: string; kicker: string; footer: string };
 

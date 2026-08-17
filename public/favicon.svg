@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AK">
-  <!-- Offset blocks in the "Old photograph" palette, matching the homepage. -->
-  <rect width="64" height="64" fill="#fdfbd4" />
-  <rect x="8" y="8" width="38" height="38" fill="#878672" />
-  <rect x="18" y="18" width="38" height="38" fill="#c0bfa2" />
-  <rect x="13" y="13" width="38" height="38" fill="#d9d7b6" />
+  <!-- Offset blocks in the "Stone" palette, matching the homepage motif. -->
+  <rect width="64" height="64" fill="#faf9f8" />
+  <rect x="8" y="8" width="38" height="38" fill="#6e5a48" />
+  <rect x="18" y="18" width="38" height="38" fill="#ada297" />
+  <rect x="13" y="13" width="38" height="38" fill="#e8e3dd" />
   <text
     x="32"
     y="33"
@@ -12,5 +12,5 @@
     font-family="Palatino, Georgia, serif"
     font-size="26"
     font-weight="600"
-    fill="#545333">a</text>
+    fill="#221f1c">a</text>
 </svg>

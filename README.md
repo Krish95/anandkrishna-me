@@ -178,31 +178,46 @@ consent banner is required.
 
 ### The palette
 
-Light mode uses the **"Old photograph"** palette — four swatches, everything else
-a mix of two of them, so the page reads as one toned print rather than a colour
-scheme:
+Light mode is **"Stone"** — a warm neutral grey with no yellow in it, and a clay-brown
+accent.
 
-| Swatch | Role |
-|---|---|
-| `#FDFBD4` aged paper | page ground |
-| `#D9D7B6` khaki | sunken surfaces, bands, the marker highlight |
-| `#878672` olive grey | secondary text, rules |
-| `#545333` dark olive | body text |
+Every light colour derives from **five base values** with `color-mix`, so changing
+the whole scheme is a five-line edit at the top of `src/styles/global.css`. Chips,
+rules, bands, buttons, code blocks and the heading slab all recompute:
 
-Body text sits at **7.3:1** against the ground (AAA), and every chip fill clears
-4.5:1 against its ink.
+```css
+:root {
+  --base-paper:   #faf9f8;  /* page ground */
+  --base-surface: #ffffff;  /* cards */
+  --base-tint:    #f0edea;  /* bands, sunken surfaces */
+  --base-ink:     #221f1c;  /* body text */
+  --base-accent:  #6e5a48;  /* links, buttons, marks */
+}
+```
 
-Because the palette is tonal rather than hued, the type badges (`CONFERENCE`,
-`JOURNAL`, …) carry a 1px outline — without one they dissolve into whichever
-band they sit on.
+Three other schemes were built and rejected, in case you want to revisit:
 
-Dark mode is deliberately *not* a tinted mirror of this. It uses a neutral cool
+| Name | paper | surface | tint | ink | accent |
+|---|---|---|---|---|---|
+| Slate — cool, technical | `#fbfcfd` | `#ffffff` | `#edf1f4` | `#16212b` | `#2b6c8c` |
+| Sage — muted green-grey | `#fafbfa` | `#ffffff` | `#ebf0ec` | `#17201a` | `#3f6b52` |
+| Graphite — no hue | `#fcfcfc` | `#ffffff` | `#f1f1f1` | `#131313` | `#33393f` |
+
+Callout colours are the exception: `--hue-info` / `--hue-ok` / `--hue-warn` /
+`--hue-alert` are fixed, desaturated, and identical across palettes, so
+note/tip/warning/danger stay readable as categories without adding hues to the page.
+
+Two things resolved outside the token system and must be updated by hand when the
+palette changes: the social cards in `src/pages/og/[...slug].png.ts` (Satori can't
+read CSS variables) and `public/favicon.svg`.
+
+Dark mode is deliberately *not* a mirror of any of this. It uses a neutral cool
 ground with warm sand as the single accent, and swaps two mechanisms:
 
 - Links lose the highlighter sweep and become a hairline underline that thickens
-  on hover. A translucent yellow bar behind light text reads as an artefact.
+  on hover. A translucent wash behind light text reads as an artefact.
 - Bands stop being colour tints and become elevation steps, so the rhythm comes
-  from surface and the 2px rule.
+  from surface and the rule.
 
 That's why every colour is a token: `--link-wash`, `--struck-bg`, `--fill-*` /
 `--on-*` pairs. Components never name a colour directly, so a theme can change

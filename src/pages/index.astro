@@ -379,8 +379,8 @@ const [featured, notes, posts] = await Promise.all([
 
   .button[data-variant='ghost'] {
     background: transparent;
-    color: var(--ink);
-    border-color: var(--ink);
+    color: var(--ink-soft);
+    border-color: var(--rule-strong);
   }
 
   .button[data-variant='ghost']:hover {
@@ -404,12 +404,12 @@ const [featured, notes, posts] = await Promise.all([
   }
 
   .portrait::before {
-    background: var(--mint);
+    background: var(--accent-mark);
     translate: -0.7rem -0.7rem;
   }
 
   .portrait::after {
-    background: var(--peach);
+    background: color-mix(in srgb, var(--accent-mark) 55%, var(--paper));
     translate: 0.7rem 0.7rem;
   }
 
