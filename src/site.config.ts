@@ -56,14 +56,18 @@ export const SITE = {
   twitterHandle: 'anand95krish',
 
   /**
-   * Cloudflare Web Analytics: cookieless, no consent banner required.
+   * Cloudflare Web Analytics: cookieless, so no consent banner is required.
    *
-   * TODO(anand): paste the token here after adding the site in the Cloudflare
-   * dashboard (Analytics & Logs -> Web Analytics -> Add a site). Leaving it
-   * empty simply omits the script, so the site works fine without it.
+   * This is a public, write-only site identifier — it ships in the HTML to every
+   * visitor by design, so there is nothing here to keep secret.
+   *
+   * The token is needed even though the zone is proxied: Cloudflare's automatic
+   * injection rewrites HTML as it passes from an origin through the proxy, and
+   * Pages responses never make that hop. Selecting auto-inject in the dashboard
+   * appears to work but injects nothing. Emptying this string disables analytics.
    */
   analytics: {
-    cloudflareToken: '',
+    cloudflareToken: '2331ed53331b48f093d3ddcbb61628da',
   },
 } as const;
 

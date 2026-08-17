@@ -13,10 +13,12 @@ const enabled = Boolean(token) && import.meta.env.PROD;
 ---
 
 {
+  /* Mirrors the snippet Cloudflare issues verbatim. `type="module"` is what they
+     serve now, and module scripts are deferred by default, so no `defer`. */
   enabled && (
     <script
       is:inline
-      defer
+      type="module"
       src="https://static.cloudflareinsights.com/beacon.min.js"
       data-cf-beacon={JSON.stringify({ token })}
     />
