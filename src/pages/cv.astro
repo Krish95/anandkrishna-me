@@ -111,11 +111,14 @@ const publications = await getPublications();
         Listed in full on the <a href="/publications" class="marker-link">publications page</a>.
       </p>
 
+      <!--
+        Note the explicit `{' '}` after each full stop: Astro 7 compresses
+        whitespace with JSX rules, so a newline between text and a tag vanishes
+        and the citation would run together as "Tan.Dynamic Regret".
+      -->
       <ol class="print-only printpubs">
         {
           publications.map((pub) => (
-            {/* Explicit `{' '}` after each stop: Astro 7 compresses whitespace
-                with JSX rules, so a newline between text and a tag vanishes. */}
             <li>
               <span class="printpubs__authors">{pub.data.authors.join(', ')}</span>.{' '}
               <span class="printpubs__title">{stripMath(pub.data.title)}</span>.{' '}
