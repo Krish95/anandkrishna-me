@@ -32,13 +32,24 @@ const {
   article,
 } = Astro.props;
 
+/**
+ * `build.format: 'file'` means `Astro.url.pathname` carries the `.html` the
+ * server hides: `/publications.html`, `/index.html`. Declaring those as canonical
+ * would point search engines at URLs that differ from the ones actually served —
+ * and from the ones in the sitemap, which are already clean. So normalise first.
+ */
+const cleanPath = Astro.url.pathname.replace(/index\.html$/, '').replace(/\.html$/, '') || '/';
+const isHome = cleanPath === '/';
+
 // `Astro.site` comes from `site` in astro.config.ts, so every URL here is
 // absolute — required by Open Graph and by most feed readers.
-const canonical = new URL(Astro.url.pathname, Astro.site).href.replace(/\/$/, '') || Astro.site!.href;
+const canonical = isHome
+  ? Astro.site!.href
+  : new URL(cleanPath, Astro.site).href.replace(/\/$/, '');
 const ogImageUrl = new URL(ogImage, Astro.site).href;
 
 // Homepage shows the bare site title; everything else gets the suffix.
-const fullTitle = Astro.url.pathname === '/' ? SITE.title : `${title} — ${SITE.title}`;
+const fullTitle = isHome ? SITE.title : `${title} — ${SITE.title}`;
 
 const jsonLd =
   type === 'article' && article
