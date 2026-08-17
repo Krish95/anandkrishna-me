@@ -141,7 +141,10 @@ const publications = await getPublications();
                 <p class="meta">{course.when}</p>
               </div>
               <div class="row__what">
-                <h3 class="row__title row__title--sm">{course.title}</h3>
+                <h3 class="row__title row__title--sm">
+                  {course.title}
+                  {course.code && <span class="row__code">{course.code}</span>}
+                </h3>
                 <p class="meta">
                   {course.institution}
                   {course.role && <span class="row__role"> · {course.role}</span>}
@@ -422,6 +425,15 @@ const publications = await getPublications();
 
   .row__role {
     color: var(--ink-faint);
+  }
+
+  .row__code {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--ink-faint);
+    margin-left: 0.5em;
   }
 
   .row__highlights {
