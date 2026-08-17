@@ -78,10 +78,13 @@ export const SOCIALS: SocialLink[] = [
   { label: 'RSS', href: '/rss.xml', icon: 'rss' },
 ];
 
+/**
+ * `/projects` is deliberately absent: it builds and works, but holds only the
+ * note about this site. Add it back here once there's work worth listing.
+ */
 export const NAV: { label: string; href: string }[] = [
   { label: 'Home', href: '/' },
   { label: 'Publications', href: '/publications' },
   { label: 'Writing', href: '/blog' },
-  { label: 'Projects', href: '/projects' },
   { label: 'CV', href: '/cv' },
 ];

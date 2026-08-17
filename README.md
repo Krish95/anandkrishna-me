@@ -115,6 +115,7 @@ design rather than showing an empty frame.
 | All publication `date:` fields | Papers are dated by **venue year, not preprint year**, so the year headings on /publications mean what they say — the AAAI 2025 paper reads 2025, not 2024. Only the year is shown; the month is there to control sort order. |
 | `src/site.config.ts` | DBLP link is a *search* URL. Replace it with your canonical author page. |
 | Old content | Talks, slides and events from the Wowchemy site were all demo entries, so those sections don't exist here. `public/_redirects` sends their URLs home. |
+| `/projects` | Builds and works, but is **not in the nav** — it holds only the note about this site. The four course projects from your LaTeX CV (2015–2019) were added and then removed as too junior to carry. Add `{ label: 'Projects', href: '/projects' }` back to `NAV` when there's current work to list. |
 
 ---
 
@@ -278,7 +279,7 @@ src/
   content/
     publications/       one .md per paper; body = abstract
     posts/              blog posts (.md or .mdx)
-    projects/           optional; not currently in the nav
+    projects/           builds, but unlisted — see NAV in site.config.ts
     notes.yaml          homepage News band
   components/
     mdx/                Callout, Figure, Aside, Embed — usable in any .mdx post
