@@ -83,11 +83,31 @@ whoever is holding it.
 `playwright-core` rather than depending on `playwright`, which would pull a ~300MB
 browser of its own; it is an authoring tool and deliberately not part of the build.
 
+### If you change the maths or markdown pipeline
+
+Astro's content layer caches rendered markdown bodies in
+`node_modules/.astro/data-store.json`, keyed on the source file — so a change to
+KaTeX, remark or rehype does *not* invalidate it, and already-rendered abstracts
+keep their old markup until the `.md` file itself changes. Delete that file and
+rebuild after touching the pipeline. (Cloudflare builds from a clean checkout, so
+this only bites locally.)
+
 ### Posts
 
 `src/content/posts/*.md` or `.mdx`. Use `.mdx` when you want components.
 `writing-in-this-theme.mdx` is a reference post that exercises every markdown
 feature and component available — keep it while it's useful, then delete it.
+
+**Writing is currently unpublished.** `publishWriting: false` in
+`src/site.config.ts` withholds the whole section from production: `/blog` and
+`/tags` render as empty, `noindex` pages, individual post URLs aren't emitted at
+all, the feed carries no items, and nothing links or sitemaps them. Drafting is
+unaffected — `npm run dev` ignores the flag, so you see every post locally.
+Set it to `true` and rebuild to launch; there is nothing else to change.
+
+The flag works by gating `getPosts()` in `src/lib/content.ts`, which every
+writing route is built from. Add new writing routes on top of that helper and
+they inherit the behaviour for free.
 
 ### News feed
 
@@ -114,6 +134,7 @@ design rather than showing an empty frame.
 | All publication `date:` fields | Papers are dated by **venue year, not preprint year**, so the year headings on /publications mean what they say — the AAAI 2025 paper reads 2025, not 2024. Only the year is shown; the month is there to control sort order. |
 | `src/site.config.ts` | DBLP link is a *search* URL. Replace it with your canonical author page. |
 | Old content | Talks, slides and events from the Wowchemy site were all demo entries, so those sections don't exist here. `public/_redirects` sends their URLs home. |
+| `/blog`, `/tags` | Live but withheld — see `publishWriting` under [Posts](#posts). |
 | `/projects` | Builds and works, but is **not in the nav** — it holds only the note about this site. The four course projects from your LaTeX CV (2015–2019) were added and then removed as too junior to carry. Add `{ label: 'Projects', href: '/projects' }` back to `NAV` when there's current work to list. |
 
 ---

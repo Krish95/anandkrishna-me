@@ -1,5 +1,6 @@
 ---
 import PageLayout from '@/layouts/PageLayout.astro';
+import { SITE } from '@/site.config';
 
 /**
  * Static full-text search via Pagefind.
@@ -22,8 +23,16 @@ import PageLayout from '@/layouts/PageLayout.astro';
 
   <noscript>
     <p class="noscript">
-      Search needs JavaScript. The <a href="/blog">writing index</a> lists every post if you'd
-      rather browse.
+      Search needs JavaScript.{' '}
+      {SITE.publishWriting ? (
+        <>
+          The <a href="/blog">writing index</a> lists every post if you'd rather browse.
+        </>
+      ) : (
+        <>
+          The <a href="/publications">publications list</a> is browsable without it.
+        </>
+      )}
     </p>
   </noscript>
 

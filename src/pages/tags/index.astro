@@ -1,6 +1,7 @@
 ---
 import PageLayout from '@/layouts/PageLayout.astro';
 import Tag from '@/components/Tag.astro';
+import { SITE } from '@/site.config';
 import { getTags } from '@/lib/content';
 
 const tags = await getTags();
@@ -8,12 +9,17 @@ const tags = await getTags();
 
 <PageLayout
   title="Topics"
-  kicker={`${tags.length} ${tags.length === 1 ? 'topic' : 'topics'}`}
+  noindex={!SITE.publishWriting}
+  kicker={tags.length > 0 ? `${tags.length} ${tags.length === 1 ? 'topic' : 'topics'}` : undefined}
   lede="Everything I've written, sorted by what it's about."
 >
   {
     tags.length === 0 ? (
-      <p class="empty">No tags yet — add some to a post's frontmatter.</p>
+      <p class="empty">
+        {SITE.publishWriting
+          ? "No tags yet — add some to a post's frontmatter."
+          : 'Nothing here yet — the first posts are still being written.'}
+      </p>
     ) : (
       <ul class="cloud">
         {tags.map(({ tag, count }) => (

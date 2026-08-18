@@ -65,6 +65,19 @@ export const SITE = {
   analytics: {
     cloudflareToken: '2331ed53331b48f093d3ddcbb61628da',
   },
+
+  /**
+   * Writing is unpublished until there's something to publish.
+   *
+   * While false, `getPosts()` returns nothing in production builds, which is
+   * what every writing route is built from — so /blog and /tags render as empty
+   * pages, individual post URLs aren't emitted at all, the RSS feed carries no
+   * items, and none of it is linked, sitemapped, or indexed. Drafts stay fully
+   * visible in `npm run dev`, so writing them is unaffected.
+   *
+   * Flip to true and rebuild to launch. Nothing else needs changing.
+   */
+  publishWriting: false,
 } as const;
 
 export type SocialLink = {
@@ -80,7 +93,8 @@ export const SOCIALS: SocialLink[] = [
   { label: 'X', href: 'https://x.com/anand95krish', icon: 'x' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/anandkrishna95/', icon: 'linkedin' },
   { label: 'DBLP', href: 'https://dblp.org/search?q=Anand+Krishna', icon: 'dblp' },
-  { label: 'RSS', href: '/rss.xml', icon: 'rss' },
+  // An empty feed is a dead end, so it only appears once writing is published.
+  ...(SITE.publishWriting ? [{ label: 'RSS', href: '/rss.xml', icon: 'rss' as const }] : []),
 ];
 
 /**
@@ -90,6 +104,7 @@ export const SOCIALS: SocialLink[] = [
 export const NAV: { label: string; href: string }[] = [
   { label: 'Home', href: '/' },
   { label: 'Publications', href: '/publications' },
-  { label: 'Writing', href: '/blog' },
+  // Restored automatically by `publishWriting` above.
+  ...(SITE.publishWriting ? [{ label: 'Writing', href: '/blog' }] : []),
   { label: 'CV', href: '/cv' },
 ];

@@ -1,6 +1,12 @@
 ---
 import Base from '@/layouts/Base.astro';
 import Icon from '@/components/Icon.astro';
+import { SITE } from '@/site.config';
+
+// Don't send a lost reader to a section that isn't published yet.
+const primary = SITE.publishWriting
+  ? { href: '/blog', label: 'Writing' }
+  : { href: '/publications', label: 'Publications' };
 ---
 
 <Base title="Not found" description="That page doesn't exist." noindex>
@@ -8,11 +14,12 @@ import Icon from '@/components/Icon.astro';
     <p class="notfound__code">404</p>
     <h1 class="notfound__title">This page isn't here.</h1>
     <p class="notfound__text">
-      Either it moved, or it never existed. Both happen. Try the writing index or search.
+      Either it moved, or it never existed. Both happen. Try {primary.label.toLowerCase()} or
+      search.
     </p>
     <div class="notfound__actions">
-      <a class="button" href="/blog">
-        Writing
+      <a class="button" href={primary.href}>
+        {primary.label}
         <Icon name="arrow-right" size={15} />
       </a>
       <a class="button" data-variant="ghost" href="/search">

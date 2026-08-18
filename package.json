@@ -43,5 +43,8 @@
     "playwright-core": "^1.62.1",
     "typescript": "^5.9.0",
     "wrangler": "^4.123.0"
+  },
+  "overrides": {
+    "katex": "$katex"
   }
 }

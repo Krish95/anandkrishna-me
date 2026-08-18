@@ -100,12 +100,18 @@ const jsonLd =
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title={`${SITE.title} — Writing`}
-      href={new URL('/rss.xml', Astro.site).href}
-    />
+    {
+      /* Advertising a feed with no items in it invites readers to subscribe to
+         nothing, so the link waits for `publishWriting`. */
+      SITE.publishWriting && (
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={`${SITE.title} — Writing`}
+          href={new URL('/rss.xml', Astro.site).href}
+        />
+      )
+    }
 
     <!-- Open Graph -->
     <meta property="og:type" content={type} />

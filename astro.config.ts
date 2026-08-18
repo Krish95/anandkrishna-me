@@ -21,7 +21,18 @@ export default defineConfig({
   site: process.env.SITE_URL ?? SITE.url,
   trailingSlash: 'never',
 
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    sitemap({
+      /**
+       * While `publishWriting` is false the writing routes still build (as empty
+       * shells, and with `noindex`), but there's nothing there worth submitting
+       * to a search engine, so keep them out of the sitemap too.
+       */
+      filter: (page) =>
+        SITE.publishWriting || !/\/(blog|tags)(\/|$|\.html$)/.test(new URL(page).pathname),
+    }),
+  ],
 
   vite: {
     plugins: [tailwindcss()],

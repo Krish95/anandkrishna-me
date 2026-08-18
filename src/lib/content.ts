@@ -1,5 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
+import { SITE } from '@/site.config';
+
 export type Post = CollectionEntry<'posts'>;
 export type Project = CollectionEntry<'projects'>;
 export type Note = CollectionEntry<'notes'>;
@@ -9,8 +11,16 @@ export type Publication = CollectionEntry<'publications'>;
 const isVisible = (entry: { data: { draft: boolean } }) =>
   import.meta.env.PROD ? !entry.data.draft : true;
 
-/** All posts, newest first. */
+/**
+ * All posts, newest first.
+ *
+ * The single gate for `SITE.publishWriting`: /blog, /tags, every post page, the
+ * RSS feed and the homepage band are all built from this, so returning nothing
+ * here withholds the whole section at once. Dev builds ignore the flag, so
+ * drafting stays normal.
+ */
 export async function getPosts(): Promise<Post[]> {
+  if (!SITE.publishWriting && import.meta.env.PROD) return [];
   const posts = await getCollection('posts', isVisible);
   return posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 }

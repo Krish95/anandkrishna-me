@@ -1,6 +1,7 @@
 ---
 import PageLayout from '@/layouts/PageLayout.astro';
 import Tag from '@/components/Tag.astro';
+import { SITE } from '@/site.config';
 import { getPosts, getTags } from '@/lib/content';
 import { formatDateShort, isoDate, readingTime } from '@/lib/format';
 
@@ -23,7 +24,8 @@ const years = [...byYear.keys()].sort((a, b) => b - a);
 
 <PageLayout
   title="Writing"
-  kicker={`${posts.length} ${posts.length === 1 ? 'post' : 'posts'}`}
+  noindex={!SITE.publishWriting}
+  kicker={posts.length > 0 ? `${posts.length} ${posts.length === 1 ? 'post' : 'posts'}` : undefined}
   lede="Occasional notes on algorithms, fair division, learning theory, and whatever else is currently on the whiteboard."
 >
   {
@@ -42,12 +44,17 @@ const years = [...byYear.keys()].sort((a, b) => b - a);
   }
 
   {
-    posts.length === 0 && (
-      <p class="empty">
-        Nothing published yet. Add an <code>.mdx</code> file under
-        <code>src/content/posts/</code> to get going.
-      </p>
-    )
+    /* Two different audiences: a reader who found the URL, and you in `npm run
+       dev` with nothing written yet. */
+    posts.length === 0 &&
+      (SITE.publishWriting ? (
+        <p class="empty">
+          Nothing published yet. Add an <code>.mdx</code> file under
+          <code>src/content/posts/</code> to get going.
+        </p>
+      ) : (
+        <p class="empty">Nothing here yet — the first posts are still being written.</p>
+      ))
   }
 
   {
