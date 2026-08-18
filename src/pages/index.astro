@@ -99,18 +99,15 @@ const [featured, notes, posts] = await Promise.all([
     <div class="about">
       <div class="about__text">
         <p class="label about__label">About</p>
+        {/* The hero already describes the current role, so this covers the path
+            that led there rather than repeating it. */}
         <p>
-          I lead Data Science &amp; AI at <a
-            href="https://poiro.com"
-            class="marker-link"
-            rel="noopener">Poiro</a
-          >, where we build AI systems and agents that supercharge marketing workflows and bring
-          brands closer to consumers. Before that I was a research consultant at Walmart, and a
-          Postdoctoral Research Fellow at the <a
-            href="https://nus.edu.sg/"
-            class="marker-link"
-            rel="noopener">National University of Singapore</a
-          >, working with Prof. Vincent Y. F. Tan.
+          Before <a href="https://poiro.com" class="marker-link" rel="noopener">Poiro</a> I was a
+          research consultant in Walmart&rsquo;s AdTech team, and a Postdoctoral Research Fellow at
+          the <a href="https://nus.edu.sg/" class="marker-link" rel="noopener"
+            >National University of Singapore</a
+          >, working with Prof. Vincent Y. F. Tan on outlier-robust optimization and multi-armed
+          bandits.
         </p>
         <p>
           I obtained my Ph.D. as a Prime Minister's Research Fellow (PMRF) in the Department of
@@ -309,15 +306,14 @@ const [featured, notes, posts] = await Promise.all([
 
   .hero__tagline {
     margin: 1.5rem 0 0;
-    font-size: 1.3rem;
-    line-height: 1.5;
+    /* Three sentences rather than one, so it reads as a paragraph: a little
+       smaller, a wider measure, and `pretty` instead of `balance` — balance is
+       for short blocks and browsers stop applying it past a few lines anyway. */
+    font-size: 1.15rem;
+    line-height: 1.6;
     color: var(--ink-soft);
-    max-width: 46ch;
-    /* `balance`, not `pretty`: pretty only protects the last line from being an
-       orphan and breaks greedily above it, which left a visibly short second
-       line here. `balance` evens every line, which is what a short hero
-       statement wants. */
-    text-wrap: balance;
+    max-width: 64ch;
+    text-wrap: pretty;
   }
 
   .hero__links {

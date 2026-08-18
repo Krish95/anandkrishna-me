@@ -78,7 +78,7 @@ export interface CV {
 
 export const cv: CV = {
   summary:
-    'I lead Data Science & AI at Poiro. Previously a Research Consultant in Walmart’s AdTech team, and a Postdoctoral Research Fellow at the National University of Singapore working on outlier-robust optimization and multi-armed bandits. I completed my Ph.D. at the Indian Institute of Science as a Prime Minister’s Research Fellow, under Prof. Y. Narahari and Assoc. Prof. Siddharth Barman.',
+    'I lead AI/ML at Poiro, working on generative AI and agentic systems for creative production. Previously a Research Consultant in Walmart’s AdTech team, and a Postdoctoral Research Fellow at the National University of Singapore working on outlier-robust optimization and multi-armed bandits. I completed my Ph.D. at the Indian Institute of Science as a Prime Minister’s Research Fellow, under Prof. Y. Narahari and Assoc. Prof. Siddharth Barman.',
 
   /**
    * Generated from this very page: `npm run cv:pdf` renders /cv through the
