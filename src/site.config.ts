@@ -18,7 +18,7 @@ export const SITE = {
 
   /** Meta description fallback and RSS channel description. */
   description:
-    'Lead AI Scientist at Poiro, working on generative AI and agentic systems for creative production. Research background in game theory, online learning, and randomized algorithms.',
+    'Lead AI Scientist at Poiro, working on generative AI and agentic systems for creative production. Research background in game theory and online learning.',
 
   author: {
     name: 'Anand Krishna',
